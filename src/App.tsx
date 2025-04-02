@@ -30,6 +30,8 @@ import AdminDashboard from "./pages/Admin/Dashboard";
 import AddProduct from "./pages/Admin/AddProduct";
 import AddBlog from "./pages/Admin/AddBlog";
 import ProductManagement from "./pages/Admin/ProductManagement";
+import OrderManagement from "./pages/Admin/OrderManagement";
+import UserManagement from "./pages/Admin/UserManagement";
 
 // Components
 import RequireAuth from "./components/RequireAuth";
@@ -83,6 +85,8 @@ const App = () => (
                 <Route path="products/add" element={<AddProduct />} />
                 <Route path="products/edit/:id" element={<AddProduct />} />
                 <Route path="blog/add" element={<AddBlog />} />
+                <Route path="orders" element={<OrderManagement />} />
+                <Route path="users" element={<UserManagement />} />
               </Route>
               
               {/* 404 Route */}

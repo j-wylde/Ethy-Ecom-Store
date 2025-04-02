@@ -3,57 +3,18 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Package, Pencil, Trash, ArrowUpRight, Eye, MessageSquare, Filter, Plus } from "lucide-react";
-
-// Mock data for admin dashboard
-const products = [
-  { id: 1, name: "HYDRATING LIP SCRUB", price: 8250.00, stock: 25, category: "Lip Care" },
-  { id: 2, name: "HYDRATING LIP MASK", price: 8250.00, stock: 18, category: "Lip Care" },
-  { id: 3, name: "SONIC JADE ROLLER", price: 18800.00, stock: 10, category: "Skincare Devices" },
-  { id: 4, name: "LIP BUTTER", price: 8800.00, stock: 30, category: "Lip Care" },
-  { id: 5, name: "ES HAIR SCRUNCHIES", price: 7150.00, stock: 15, category: "Hair Care" },
-];
-
-const blogPosts = [
-  { id: 1, title: "5 Essential Skincare Tips for Dry Skin", date: "2023-06-15", status: "Published", comments: 12 },
-  { id: 2, title: "How to Choose the Right Lip Care Products", date: "2023-06-02", status: "Published", comments: 8 },
-  { id: 3, title: "Benefits of Using Jade Rollers in Your Routine", date: "2023-05-20", status: "Draft", comments: 0 },
-];
-
-const comments = [
-  { id: 1, author: "Jane Smith", date: "2023-06-18", content: "I love the lip scrub! It's so hydrating.", postTitle: "5 Essential Skincare Tips for Dry Skin", approved: true },
-  { id: 2, author: "Michael Brown", date: "2023-06-16", content: "Can you recommend a good moisturizer to use with the jade roller?", postTitle: "Benefits of Using Jade Rollers in Your Routine", approved: true },
-  { id: 3, author: "Sarah Johnson", date: "2023-06-15", content: "This was very helpful, thank you!", postTitle: "How to Choose the Right Lip Care Products", approved: false },
-];
+import { Package, Pencil, Trash, ArrowUpRight, Eye, MessageSquare, Plus } from "lucide-react";
+import { useProducts } from "@/services/productService";
+import { useBlogPosts } from "@/services/blogService";
+import { Button } from "@/components/ui/button";
 
 const AdminDashboard = () => {
-  const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
-  const [selectedPosts, setSelectedPosts] = useState<number[]>([]);
-  const [selectedComments, setSelectedComments] = useState<number[]>([]);
-
-  const toggleProductSelection = (id: number) => {
-    if (selectedProducts.includes(id)) {
-      setSelectedProducts(selectedProducts.filter(productId => productId !== id));
-    } else {
-      setSelectedProducts([...selectedProducts, id]);
-    }
-  };
-
-  const togglePostSelection = (id: number) => {
-    if (selectedPosts.includes(id)) {
-      setSelectedPosts(selectedPosts.filter(postId => postId !== id));
-    } else {
-      setSelectedPosts([...selectedPosts, id]);
-    }
-  };
-
-  const toggleCommentSelection = (id: number) => {
-    if (selectedComments.includes(id)) {
-      setSelectedComments(selectedComments.filter(commentId => commentId !== id));
-    } else {
-      setSelectedComments([...selectedComments, id]);
-    }
-  };
+  const { data: products = [], isLoading: isLoadingProducts } = useProducts();
+  const { data: blogPosts = [], isLoading: isLoadingBlogPosts } = useBlogPosts();
+  
+  // Take the first 5 products and blog posts for the dashboard
+  const displayProducts = products.slice(0, 5);
+  const displayBlogPosts = blogPosts.slice(0, 5);
 
   return (
     <div className="container mx-auto py-10 px-4">
@@ -64,18 +25,76 @@ const AdminDashboard = () => {
         </Link>
       </div>
 
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <div className="flex flex-col space-y-1.5">
+              <CardTitle>Products</CardTitle>
+              <CardDescription>Manage your products</CardDescription>
+            </div>
+            <Package className="h-5 w-5 text-coral" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{products.length}</div>
+            <p className="text-xs text-muted-foreground">Total products</p>
+            <Button asChild className="mt-4 w-full coral-button">
+              <Link to="/admin/products">View All Products</Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <div className="flex flex-col space-y-1.5">
+              <CardTitle>Blog Posts</CardTitle>
+              <CardDescription>Manage your blog content</CardDescription>
+            </div>
+            <MessageSquare className="h-5 w-5 text-coral" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{blogPosts.length}</div>
+            <p className="text-xs text-muted-foreground">Published posts</p>
+            <Button asChild className="mt-4 w-full coral-button">
+              <Link to="/admin/blog">View All Posts</Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <div className="flex flex-col space-y-1.5">
+              <CardTitle>Quick Actions</CardTitle>
+              <CardDescription>Add new content</CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Button asChild className="w-full justify-start">
+              <Link to="/admin/products/add" className="flex items-center">
+                <Plus size={16} className="mr-2" />
+                Add New Product
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="w-full justify-start">
+              <Link to="/admin/blog/add" className="flex items-center">
+                <Plus size={16} className="mr-2" />
+                Create Blog Post
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+
       <Tabs defaultValue="products">
-        <TabsList className="grid w-full grid-cols-3 mb-8">
+        <TabsList className="grid w-full grid-cols-2 mb-8">
           <TabsTrigger value="products">Products</TabsTrigger>
           <TabsTrigger value="blog">Blog Posts</TabsTrigger>
-          <TabsTrigger value="comments">Comments</TabsTrigger>
         </TabsList>
 
         <TabsContent value="products">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>Product Management</CardTitle>
+                <CardTitle>Recent Products</CardTitle>
                 <CardDescription>Manage your store products, update inventory and prices.</CardDescription>
               </div>
               <Link to="/admin/products/add" className="coral-button flex items-center gap-2">
@@ -84,44 +103,48 @@ const AdminDashboard = () => {
               </Link>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="bg-gray-100">
-                      <th className="p-3 text-left">ID</th>
-                      <th className="p-3 text-left">Name</th>
-                      <th className="p-3 text-left">Category</th>
-                      <th className="p-3 text-right">Price</th>
-                      <th className="p-3 text-right">Stock</th>
-                      <th className="p-3 text-center">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {products.map(product => (
-                      <tr key={product.id} className="border-t">
-                        <td className="p-3">{product.id}</td>
-                        <td className="p-3 font-medium">{product.name}</td>
-                        <td className="p-3">{product.category}</td>
-                        <td className="p-3 text-right">₦{product.price.toLocaleString()}</td>
-                        <td className="p-3 text-right">{product.stock}</td>
-                        <td className="p-3">
-                          <div className="flex justify-center space-x-2">
-                            <button className="p-1 text-blue-600 hover:bg-blue-100 rounded">
-                              <Eye size={18} />
-                            </button>
-                            <button className="p-1 text-amber-600 hover:bg-amber-100 rounded">
-                              <Pencil size={18} />
-                            </button>
-                            <button className="p-1 text-red-600 hover:bg-red-100 rounded">
-                              <Trash size={18} />
-                            </button>
-                          </div>
-                        </td>
+              {isLoadingProducts ? (
+                <div className="text-center py-8">Loading products...</div>
+              ) : displayProducts.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">No products found</p>
+                  <p className="text-gray-400 mt-2">Get started by adding your first product</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="p-3 text-left">Name</th>
+                        <th className="p-3 text-left">Category</th>
+                        <th className="p-3 text-right">Price</th>
+                        <th className="p-3 text-right">Stock</th>
+                        <th className="p-3 text-center">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {displayProducts.map(product => (
+                        <tr key={product.id} className="border-t">
+                          <td className="p-3 font-medium">{product.name}</td>
+                          <td className="p-3">{product.category || "Uncategorized"}</td>
+                          <td className="p-3 text-right">${product.price.toFixed(2)}</td>
+                          <td className="p-3 text-right">{product.stock}</td>
+                          <td className="p-3">
+                            <div className="flex justify-center space-x-2">
+                              <Link to={`/products/${product.id}`} className="p-1 text-blue-600 hover:bg-blue-100 rounded">
+                                <Eye size={18} />
+                              </Link>
+                              <Link to={`/admin/products/edit/${product.id}`} className="p-1 text-amber-600 hover:bg-amber-100 rounded">
+                                <Pencil size={18} />
+                              </Link>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -130,7 +153,7 @@ const AdminDashboard = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>Blog Management</CardTitle>
+                <CardTitle>Blog Posts</CardTitle>
                 <CardDescription>Create and manage blog posts for your store.</CardDescription>
               </div>
               <Link to="/admin/blog/add" className="coral-button flex items-center gap-2">
@@ -139,104 +162,52 @@ const AdminDashboard = () => {
               </Link>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="bg-gray-100">
-                      <th className="p-3 text-left">ID</th>
-                      <th className="p-3 text-left">Title</th>
-                      <th className="p-3 text-left">Date</th>
-                      <th className="p-3 text-left">Status</th>
-                      <th className="p-3 text-right">Comments</th>
-                      <th className="p-3 text-center">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {blogPosts.map(post => (
-                      <tr key={post.id} className="border-t">
-                        <td className="p-3">{post.id}</td>
-                        <td className="p-3 font-medium">{post.title}</td>
-                        <td className="p-3">{post.date}</td>
-                        <td className="p-3">
-                          <span className={`px-2 py-1 rounded text-xs ${
-                            post.status === "Published" ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"
-                          }`}>
-                            {post.status}
-                          </span>
-                        </td>
-                        <td className="p-3 text-right">{post.comments}</td>
-                        <td className="p-3">
-                          <div className="flex justify-center space-x-2">
-                            <button className="p-1 text-blue-600 hover:bg-blue-100 rounded">
-                              <Eye size={18} />
-                            </button>
-                            <button className="p-1 text-amber-600 hover:bg-amber-100 rounded">
-                              <Pencil size={18} />
-                            </button>
-                            <button className="p-1 text-red-600 hover:bg-red-100 rounded">
-                              <Trash size={18} />
-                            </button>
-                          </div>
-                        </td>
+              {isLoadingBlogPosts ? (
+                <div className="text-center py-8">Loading blog posts...</div>
+              ) : displayBlogPosts.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">No blog posts found</p>
+                  <p className="text-gray-400 mt-2">Get started by creating your first blog post</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="p-3 text-left">Title</th>
+                        <th className="p-3 text-left">Date</th>
+                        <th className="p-3 text-left">Status</th>
+                        <th className="p-3 text-center">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="comments">
-          <Card>
-            <CardHeader>
-              <CardTitle>Comment Moderation</CardTitle>
-              <CardDescription>Approve, edit, or delete comments on your blog posts.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="bg-gray-100">
-                      <th className="p-3 text-left">Author</th>
-                      <th className="p-3 text-left">Comment</th>
-                      <th className="p-3 text-left">Post</th>
-                      <th className="p-3 text-left">Date</th>
-                      <th className="p-3 text-left">Status</th>
-                      <th className="p-3 text-center">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {comments.map(comment => (
-                      <tr key={comment.id} className="border-t">
-                        <td className="p-3 font-medium">{comment.author}</td>
-                        <td className="p-3">{comment.content}</td>
-                        <td className="p-3">{comment.postTitle}</td>
-                        <td className="p-3">{comment.date}</td>
-                        <td className="p-3">
-                          <span className={`px-2 py-1 rounded text-xs ${
-                            comment.approved ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"
-                          }`}>
-                            {comment.approved ? "Approved" : "Pending"}
-                          </span>
-                        </td>
-                        <td className="p-3">
-                          <div className="flex justify-center space-x-2">
-                            {!comment.approved && (
-                              <button className="p-1 text-green-600 hover:bg-green-100 rounded">
-                                <ArrowUpRight size={18} />
-                              </button>
-                            )}
-                            <button className="p-1 text-red-600 hover:bg-red-100 rounded">
-                              <Trash size={18} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {displayBlogPosts.map(post => (
+                        <tr key={post.id} className="border-t">
+                          <td className="p-3 font-medium">{post.title}</td>
+                          <td className="p-3">{new Date(post.created_at || "").toLocaleDateString()}</td>
+                          <td className="p-3">
+                            <span className={`px-2 py-1 rounded text-xs ${
+                              post.published ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"
+                            }`}>
+                              {post.published ? "Published" : "Draft"}
+                            </span>
+                          </td>
+                          <td className="p-3">
+                            <div className="flex justify-center space-x-2">
+                              <Link to={`/blog/${post.id}`} className="p-1 text-blue-600 hover:bg-blue-100 rounded">
+                                <Eye size={18} />
+                              </Link>
+                              <Link to={`/admin/blog/edit/${post.id}`} className="p-1 text-amber-600 hover:bg-amber-100 rounded">
+                                <Pencil size={18} />
+                              </Link>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

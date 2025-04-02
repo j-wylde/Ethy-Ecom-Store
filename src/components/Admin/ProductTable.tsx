@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Eye, Pencil, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Eye, Pencil, Trash2, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -15,8 +15,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { useProducts } from "@/services/productService";
-import { supabase } from "@/integrations/supabase/client";
+import { useProducts, useDeleteProduct } from "@/services/productService";
 
 interface ProductTableProps {
   searchQuery?: string;
@@ -24,9 +23,9 @@ interface ProductTableProps {
 
 const ProductTable = ({ searchQuery = "" }: ProductTableProps) => {
   const { data: products, isLoading, error, refetch } = useProducts();
+  const { mutateAsync: deleteProduct, isPending: isDeleting } = useDeleteProduct();
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteProductId, setDeleteProductId] = useState<string | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
   const { toast } = useToast();
 
   const filteredProducts = products?.filter(
@@ -48,20 +47,13 @@ const ProductTable = ({ searchQuery = "" }: ProductTableProps) => {
   const handleDeleteProduct = async () => {
     if (!deleteProductId) return;
 
-    setIsDeleting(true);
     try {
-      const { error } = await supabase
-        .from("products")
-        .delete()
-        .eq("id", deleteProductId);
-
-      if (error) throw error;
+      await deleteProduct(deleteProductId);
 
       toast({
         title: "Product deleted",
         description: "The product has been successfully deleted",
       });
-      refetch();
     } catch (error: any) {
       toast({
         title: "Error",
@@ -69,7 +61,6 @@ const ProductTable = ({ searchQuery = "" }: ProductTableProps) => {
         variant: "destructive",
       });
     } finally {
-      setIsDeleting(false);
       setDeleteProductId(null);
     }
   };
@@ -104,10 +95,16 @@ const ProductTable = ({ searchQuery = "" }: ProductTableProps) => {
 
   if (!paginatedProducts || paginatedProducts.length === 0) {
     return (
-      <div className="p-4 text-center">
+      <div className="p-4 text-center py-10">
         <p className="text-gray-500">
           {searchQuery ? "No products match your search" : "No products found"}
         </p>
+        <p className="text-gray-400 mt-2">
+          Get started by adding your first product
+        </p>
+        <Button asChild className="mt-4 coral-button">
+          <Link to="/admin/products/add">Add Product</Link>
+        </Button>
       </div>
     );
   }
@@ -243,8 +240,9 @@ const ProductTable = ({ searchQuery = "" }: ProductTableProps) => {
             <AlertDialogAction
               onClick={handleDeleteProduct}
               disabled={isDeleting}
-              className="bg-red-500 hover:bg-red-600"
+              className="bg-red-500 hover:bg-red-600 flex items-center gap-2"
             >
+              {isDeleting && <Loader2 className="h-4 w-4 animate-spin" />}
               {isDeleting ? "Deleting..." : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
