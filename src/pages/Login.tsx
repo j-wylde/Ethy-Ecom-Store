@@ -1,42 +1,28 @@
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const navigate = useNavigate();
+  const { signIn, isLoading } = useAuth();
 
-  // Mock login function (will be replaced with Supabase authentication)
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     
-    try {
-      // This will be replaced with actual Supabase authentication
-      console.log("Logging in with:", email, password);
-      
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast({
-        title: "Success!",
-        description: "You have been logged in successfully.",
-      });
-      
-      navigate("/account");
-    } catch (error) {
+    if (!email || !password) {
       toast({
         title: "Error",
-        description: "Invalid email or password.",
+        description: "Please fill in all fields.",
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
+      return;
     }
+    
+    await signIn(email, password);
   };
 
   return (

@@ -1,6 +1,7 @@
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 
 const Register = () => {
@@ -8,11 +9,9 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const { signUp, isLoading } = useAuth();
   const { toast } = useToast();
-  const navigate = useNavigate();
 
-  // Mock register function (will be replaced with Supabase authentication)
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -25,30 +24,7 @@ const Register = () => {
       return;
     }
     
-    setIsLoading(true);
-    
-    try {
-      // This will be replaced with actual Supabase authentication
-      console.log("Registering with:", name, email, password);
-      
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast({
-        title: "Account created!",
-        description: "You have been registered successfully.",
-      });
-      
-      navigate("/login");
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to create account.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    await signUp(email, password, name);
   };
 
   return (
