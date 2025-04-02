@@ -4,12 +4,12 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu } from "lucide-react";
 import Logo from "./Logo";
 import { Button } from "./ui/button";
-import { useMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/hooks/useAuth";
 import CartIcon from "./CartIcon";
 
 const Navbar = () => {
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const { user, signOut } = useAuth();
