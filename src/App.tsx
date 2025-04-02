@@ -25,6 +25,9 @@ import AdminDashboard from "./pages/Admin/Dashboard";
 import AddProduct from "./pages/Admin/AddProduct";
 import AddBlog from "./pages/Admin/AddBlog";
 
+// Components
+import RequireAuth from "./components/RequireAuth";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -43,11 +46,19 @@ const App = () => (
               <Route path="/blog" element={<Blog />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/account" element={<Account />} />
+              <Route path="/account" element={
+                <RequireAuth>
+                  <Account />
+                </RequireAuth>
+              } />
             </Route>
             
             {/* Admin Routes */}
-            <Route path="/admin" element={<AdminLayout />}>
+            <Route path="/admin" element={
+              <RequireAuth>
+                <AdminLayout />
+              </RequireAuth>
+            }>
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="products/add" element={<AddProduct />} />
               <Route path="blog/add" element={<AddBlog />} />
