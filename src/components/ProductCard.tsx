@@ -3,7 +3,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ShoppingCart } from "lucide-react";
 import type { Product } from "@/services/productService";
+import { useCart } from "@/contexts/CartContext";
 
 interface ProductCardProps {
   product: Product;
@@ -11,6 +13,12 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { id, name, price, image_url, description } = product;
+  const { addToCart } = useCart();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    addToCart(product, 1);
+  };
 
   return (
     <Card className="h-full flex flex-col overflow-hidden">
@@ -31,8 +39,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <p className="font-bold text-lg">${price.toFixed(2)}</p>
       </CardContent>
       <CardFooter className="p-4 pt-0 flex gap-2">
-        <Button asChild className="w-full">
+        <Button asChild variant="outline" className="w-full">
           <Link to={`/products/${id}`}>View Details</Link>
+        </Button>
+        <Button className="shrink-0" onClick={handleAddToCart}>
+          <ShoppingCart className="h-4 w-4" />
         </Button>
       </CardFooter>
     </Card>

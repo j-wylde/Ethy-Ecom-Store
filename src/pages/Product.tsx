@@ -5,12 +5,15 @@ import { Button } from "@/components/ui/button";
 import { useProduct } from "@/services/productService";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { useCart } from "@/contexts/CartContext";
+import { ShoppingCart } from "lucide-react";
 
 const Product = () => {
   const { slug } = useParams<{ slug: string }>();
   const { data: product, isLoading, error } = useProduct(slug || "");
   const [quantity, setQuantity] = useState(1);
   const { toast } = useToast();
+  const { addToCart } = useCart();
 
   const handleQuantityChange = (amount: number) => {
     const newQuantity = quantity + amount;
@@ -20,11 +23,9 @@ const Product = () => {
   };
 
   const handleAddToCart = () => {
-    // This will be implemented when we build cart functionality
-    toast({
-      title: "Added to cart",
-      description: `${quantity} ${product?.name} added to your cart`,
-    });
+    if (product) {
+      addToCart(product, quantity);
+    }
   };
 
   if (isLoading) {
@@ -114,7 +115,7 @@ const Product = () => {
             onClick={handleAddToCart}
             disabled={product.stock <= 0}
           >
-            Add to Cart
+            <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
           </Button>
         </div>
       </div>

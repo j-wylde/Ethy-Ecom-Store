@@ -1,47 +1,186 @@
 
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Heart, ShoppingCart, Search, User } from "lucide-react";
+import { Menu } from "lucide-react";
 import Logo from "./Logo";
+import { Button } from "./ui/button";
+import { useMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/hooks/useAuth";
+import CartIcon from "./CartIcon";
 
 const Navbar = () => {
+  const isMobile = useMobile();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-  
-  const isActive = (path: string) => {
-    return location.pathname === path ? "active" : "";
-  };
+  const { user, signOut } = useAuth();
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
 
   return (
-    <nav className="bg-coral py-4 px-6 sticky top-0 z-50">
-      <div className="container mx-auto flex items-center justify-between">
-        <Link to="/" className="text-2xl font-bold text-white">
+    <nav className="bg-white shadow-sm py-4">
+      <div className="container mx-auto flex justify-between items-center px-4">
+        <div className="flex items-center">
           <Logo />
-        </Link>
-        
-        <div className="hidden md:flex items-center space-x-8">
-          <Link to="/" className={`nav-link ${isActive("/")}`}>HOME</Link>
-          <Link to="/shop" className={`nav-link ${isActive("/shop")}`}>SHOP</Link>
-          <Link to="/categories" className={`nav-link ${isActive("/categories")}`}>CATEGORIES</Link>
-          <Link to="/gift-items" className={`nav-link ${isActive("/gift-items")}`}>GIFT ITEMS</Link>
-          <Link to="/blog" className={`nav-link ${isActive("/blog")}`}>BLOG</Link>
-          <Link to="/about" className={`nav-link ${isActive("/about")}`}>ABOUT US</Link>
-          <Link to="/contact" className={`nav-link ${isActive("/contact")}`}>CONTACT</Link>
+          {!isMobile && (
+            <ul className="flex ml-10">
+              <li className="mr-6">
+                <Link
+                  to="/"
+                  className={`hover:text-coral ${
+                    location.pathname === "/" ? "text-coral" : ""
+                  }`}
+                >
+                  Home
+                </Link>
+              </li>
+              <li className="mr-6">
+                <Link
+                  to="/shop"
+                  className={`hover:text-coral ${
+                    location.pathname === "/shop" ? "text-coral" : ""
+                  }`}
+                >
+                  Shop
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/blog"
+                  className={`hover:text-coral ${
+                    location.pathname === "/blog" ? "text-coral" : ""
+                  }`}
+                >
+                  Blog
+                </Link>
+              </li>
+            </ul>
+          )}
         </div>
-        
-        <div className="flex items-center space-x-4">
-          <Link to="/account" className="text-white hover:text-gray-200">
-            <User size={20} />
-          </Link>
-          <Link to="/cart" className="text-white hover:text-gray-200">
-            <ShoppingCart size={20} />
-          </Link>
-          <Link to="/wishlist" className="text-white hover:text-gray-200">
-            <Heart size={20} />
-          </Link>
-          <Link to="/search" className="text-white hover:text-gray-200">
-            <Search size={20} />
-          </Link>
-        </div>
+        {isMobile ? (
+          <div className="flex items-center">
+            <Button
+              variant="ghost"
+              className="mr-4"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <Menu />
+            </Button>
+            <div className="flex items-center gap-4">
+              <CartIcon />
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-4">
+            <CartIcon />
+            {user ? (
+              <>
+                <Button asChild variant="ghost">
+                  <Link to="/account">Account</Link>
+                </Button>
+                <Button onClick={() => signOut()} variant="ghost">
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button asChild variant="ghost">
+                  <Link to="/login">Login</Link>
+                </Button>
+                <Button asChild>
+                  <Link to="/register">Sign Up</Link>
+                </Button>
+              </>
+            )}
+          </div>
+        )}
       </div>
+      {/* Mobile Menu */}
+      {isMobile && isMenuOpen && (
+        <div className="bg-white border-t mt-2">
+          <div className="container mx-auto px-4 py-4">
+            <ul className="space-y-4">
+              <li>
+                <Link
+                  to="/"
+                  className={`block py-2 hover:text-coral ${
+                    location.pathname === "/" ? "text-coral" : ""
+                  }`}
+                >
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/shop"
+                  className={`block py-2 hover:text-coral ${
+                    location.pathname === "/shop" ? "text-coral" : ""
+                  }`}
+                >
+                  Shop
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/blog"
+                  className={`block py-2 hover:text-coral ${
+                    location.pathname === "/blog" ? "text-coral" : ""
+                  }`}
+                >
+                  Blog
+                </Link>
+              </li>
+              {user ? (
+                <>
+                  <li>
+                    <Link
+                      to="/account"
+                      className={`block py-2 hover:text-coral ${
+                        location.pathname === "/account" ? "text-coral" : ""
+                      }`}
+                    >
+                      Account
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => signOut()}
+                      className="block py-2 hover:text-coral w-full text-left"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <Link
+                      to="/login"
+                      className={`block py-2 hover:text-coral ${
+                        location.pathname === "/login" ? "text-coral" : ""
+                      }`}
+                    >
+                      Login
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/register"
+                      className={`block py-2 hover:text-coral ${
+                        location.pathname === "/register" ? "text-coral" : ""
+                      }`}
+                    >
+                      Sign Up
+                    </Link>
+                  </li>
+                </>
+              )}
+            </ul>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
