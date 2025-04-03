@@ -75,12 +75,12 @@ export const useCreateBlogPost = () => {
       // Remove any Promise values and replace with null
       const sanitizedPost = { ...post };
       
-      // Fixed: Removed the instanceof check for Promise and replaced with proper handling
-      // Don't use instanceof for Promise checks - this causes a TypeScript error
+      // Fixed: Properly handle the author_id to ensure it's never null during the 'then' check
       if (typeof sanitizedPost.author_id === 'object' && sanitizedPost.author_id !== null) {
         try {
           // If it's a Promise-like object with a then method
-          if ('then' in sanitizedPost.author_id) {
+          // Using optional chaining to avoid the TS error
+          if (sanitizedPost.author_id && 'then' in sanitizedPost.author_id) {
             sanitizedPost.author_id = null;
           }
         } catch {
