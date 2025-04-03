@@ -2,7 +2,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useCreateBlogPost } from "@/services/blogService";
+import { uploadProductImage } from "@/services/storageService";
 
 const AddBlog = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +19,7 @@ const AddBlog = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { mutateAsync: createBlogPost } = useCreateBlogPost();
 
   const categories = [
     "Skincare Tips",
@@ -45,12 +49,28 @@ const AddBlog = () => {
     setIsLoading(true);
     
     try {
-      // This will be replaced with actual Supabase storage and database
-      console.log("Blog post data:", formData);
-      console.log("Featured image:", featuredImage);
+      let imageUrl = null;
       
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Upload featured image if provided
+      if (featuredImage) {
+        // Create a UUID for the blog post to use for image storage
+        const blogId = crypto.randomUUID();
+        imageUrl = await uploadProductImage(featuredImage, `blog_${blogId}`);
+      }
+      
+      // Create blog post
+      const blogData = {
+        title: formData.title,
+        content: formData.content,
+        published: formData.status === 'published',
+        image_url: imageUrl,
+        author_id: supabase.auth.getSession().then(({ data }) => data.session?.user.id),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      
+      // Use the blog service to create the post
+      await createBlogPost(blogData);
       
       toast({
         title: "Success!",
@@ -58,10 +78,11 @@ const AddBlog = () => {
       });
       
       navigate("/admin/dashboard");
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Error creating blog post:", error);
       toast({
         title: "Error",
-        description: "Failed to create blog post.",
+        description: error.message || "Failed to create blog post.",
         variant: "destructive",
       });
     } finally {
@@ -185,8 +206,9 @@ const AddBlog = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="coral-button"
+              className="coral-button flex items-center gap-2"
             >
+              {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
               {isLoading ? "Creating Post..." : "Create Post"}
             </button>
             <Link to="/admin/dashboard" className="coral-outline-button">

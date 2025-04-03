@@ -5,10 +5,13 @@ export const uploadProductImage = async (file: File, productId: string): Promise
   const fileExt = file.name.split('.').pop();
   const filePath = `${productId}/${Date.now()}.${fileExt}`;
   
+  // Determine bucket based on ID prefix
+  const bucket = productId.startsWith('blog_') ? 'blog_posts' : 'products';
+  
   // Upload the file to Supabase storage
   const { error: uploadError } = await supabase
     .storage
-    .from('products')
+    .from(bucket)
     .upload(filePath, file);
   
   if (uploadError) {
@@ -18,7 +21,7 @@ export const uploadProductImage = async (file: File, productId: string): Promise
   // Get the public URL
   const { data } = supabase
     .storage
-    .from('products')
+    .from(bucket)
     .getPublicUrl(filePath);
   
   return data.publicUrl;

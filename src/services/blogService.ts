@@ -72,13 +72,26 @@ export const useCreateBlogPost = () => {
   
   return useMutation({
     mutationFn: async (post: Omit<BlogPostType, "id">) => {
+      // Remove any Promise values (like author_id) and replace with null
+      const sanitizedPost = { ...post };
+      
+      // Convert any Promise values to their resolved values or null
+      if (sanitizedPost.author_id instanceof Promise) {
+        try {
+          sanitizedPost.author_id = await sanitizedPost.author_id;
+        } catch {
+          sanitizedPost.author_id = null;
+        }
+      }
+
       const { data, error } = await supabase
         .from("blog_posts")
-        .insert([post])
+        .insert([sanitizedPost])
         .select()
         .single();
 
       if (error) {
+        console.error("Error creating blog post:", error);
         throw new Error(error.message);
       }
 

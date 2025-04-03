@@ -74,7 +74,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (email: string, password: string, name?: string) => {
     try {
       setIsLoading(true);
-      const { error } = await supabase.auth.signUp({
+      
+      // Register the user in Supabase Auth
+      const { error, data } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -87,6 +89,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (error) {
         throw error;
+      }
+
+      // Check if the user was successfully created
+      if (data?.user) {
+        // Update the profiles table with the email
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({ email: email })
+          .eq('id', data.user.id);
+        
+        if (profileError) {
+          console.error("Failed to update profile with email:", profileError);
+        }
       }
 
       toast({
