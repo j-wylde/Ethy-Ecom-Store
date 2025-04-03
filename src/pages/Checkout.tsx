@@ -9,6 +9,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import emailjs from "emailjs-com";
 
 type CheckoutFormData = {
   fullName: string;
@@ -17,9 +18,7 @@ type CheckoutFormData = {
   city: string;
   state: string;
   zipCode: string;
-  cardNumber: string;
-  cardExpiry: string;
-  cardCVC: string;
+  notes: string;
 };
 
 const Checkout = () => {
@@ -35,9 +34,7 @@ const Checkout = () => {
     city: "",
     state: "",
     zipCode: "",
-    cardNumber: "",
-    cardExpiry: "",
-    cardCVC: "",
+    notes: "",
   });
 
   if (items.length === 0) {
@@ -45,7 +42,7 @@ const Checkout = () => {
     return null;
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -61,7 +58,8 @@ const Checkout = () => {
       const orderItems = items.map(item => ({
         product_id: item.product.id,
         quantity: item.quantity,
-        price: item.product.price
+        price: item.product.price,
+        product_name: item.product.name
       }));
 
       const { data: order, error: orderError } = await supabase
@@ -90,11 +88,50 @@ const Checkout = () => {
         if (itemError) throw itemError;
       }
 
-      // In a real application, you would process the payment here
+      // Send email using EmailJS
+      const productsTable = items.map(item => 
+        `<tr>
+          <td style="padding: 8px; border: 1px solid #ddd;">${item.product.name}</td>
+          <td style="padding: 8px; border: 1px solid #ddd;">${item.quantity}</td>
+          <td style="padding: 8px; border: 1px solid #ddd;">$${item.product.price.toFixed(2)}</td>
+          <td style="padding: 8px; border: 1px solid #ddd;">$${(item.product.price * item.quantity).toFixed(2)}</td>
+        </tr>`
+      ).join("");
+
+      const emailParams = {
+        to_email: "yung.jeri56@gmail.com",
+        from_name: formData.fullName,
+        from_email: formData.email,
+        address: `${formData.address}, ${formData.city}, ${formData.state}, ${formData.zipCode}`,
+        order_details: `
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Product</th>
+              <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Quantity</th>
+              <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Price</th>
+              <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Total</th>
+            </tr>
+            ${productsTable}
+            <tr>
+              <td colspan="3" style="padding: 8px; border: 1px solid #ddd; text-align: right;"><strong>Total:</strong></td>
+              <td style="padding: 8px; border: 1px solid #ddd;">$${subtotal.toFixed(2)}</td>
+            </tr>
+          </table>
+        `,
+        notes: formData.notes || "No additional notes",
+      };
+
+      // Replace these IDs with your actual EmailJS service, template, and user IDs
+      await emailjs.send(
+        "service_id", // Your EmailJS service ID
+        "template_id", // Your EmailJS template ID
+        emailParams,
+        "user_id" // Your EmailJS user ID
+      );
 
       toast({
         title: "Order placed successfully!",
-        description: "Your order has been confirmed.",
+        description: "Your order has been confirmed and email has been sent.",
       });
 
       // Clear the cart and redirect to a confirmation page
@@ -189,44 +226,15 @@ const Checkout = () => {
                 </div>
               </div>
 
-              <Separator className="my-8" />
-
-              <h2 className="text-xl font-bold mb-4">Payment Information</h2>
-              <div className="space-y-2 mb-6">
-                <Label htmlFor="cardNumber">Card Number</Label>
+              <div className="space-y-2 mb-8">
+                <Label htmlFor="notes">Order Notes (Optional)</Label>
                 <Input
-                  id="cardNumber"
-                  name="cardNumber"
-                  value={formData.cardNumber}
+                  id="notes"
+                  name="notes"
+                  value={formData.notes}
                   onChange={handleChange}
-                  placeholder="1234 5678 9012 3456"
-                  required
+                  placeholder="Special instructions for delivery, etc."
                 />
-              </div>
-
-              <div className="grid grid-cols-2 gap-6 mb-8">
-                <div className="space-y-2">
-                  <Label htmlFor="cardExpiry">Expiration (MM/YY)</Label>
-                  <Input
-                    id="cardExpiry"
-                    name="cardExpiry"
-                    value={formData.cardExpiry}
-                    onChange={handleChange}
-                    placeholder="MM/YY"
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="cardCVC">CVC</Label>
-                  <Input
-                    id="cardCVC"
-                    name="cardCVC"
-                    value={formData.cardCVC}
-                    onChange={handleChange}
-                    placeholder="123"
-                    required
-                  />
-                </div>
               </div>
 
               <Button type="submit" className="w-full" disabled={isLoading}>

@@ -5,16 +5,46 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Package, Pencil, Trash, ArrowUpRight, Eye, MessageSquare, Plus } from "lucide-react";
 import { useProducts } from "@/services/productService";
-import { useBlogPosts } from "@/services/blogService";
+import { useAdminBlogPosts, useDeleteBlogPost } from "@/services/blogService";
 import { Button } from "@/components/ui/button";
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 const AdminDashboard = () => {
   const { data: products = [], isLoading: isLoadingProducts } = useProducts();
-  const { data: blogPosts = [], isLoading: isLoadingBlogPosts } = useBlogPosts();
+  const { data: blogPosts = [], isLoading: isLoadingBlogPosts } = useAdminBlogPosts();
+  const deleteBlogPost = useDeleteBlogPost();
+  const { toast } = useToast();
   
   // Take the first 5 products and blog posts for the dashboard
   const displayProducts = products.slice(0, 5);
   const displayBlogPosts = blogPosts.slice(0, 5);
+
+  const handleDeleteBlogPost = async (id: string) => {
+    try {
+      await deleteBlogPost.mutateAsync(id);
+      toast({
+        title: "Success",
+        description: "Blog post deleted successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete blog post",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="container mx-auto py-10 px-4">
@@ -94,7 +124,7 @@ const AdminDashboard = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>Recent Products</CardTitle>
+                <CardTitle className="section-title">Recent Products</CardTitle>
                 <CardDescription>Manage your store products, update inventory and prices.</CardDescription>
               </div>
               <Link to="/admin/products/add" className="coral-button flex items-center gap-2">
@@ -153,7 +183,7 @@ const AdminDashboard = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>Blog Posts</CardTitle>
+                <CardTitle className="section-title">Blog Posts</CardTitle>
                 <CardDescription>Create and manage blog posts for your store.</CardDescription>
               </div>
               <Link to="/admin/blog/add" className="coral-button flex items-center gap-2">
@@ -200,6 +230,30 @@ const AdminDashboard = () => {
                               <Link to={`/admin/blog/edit/${post.id}`} className="p-1 text-amber-600 hover:bg-amber-100 rounded">
                                 <Pencil size={18} />
                               </Link>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button variant="ghost" className="p-1 text-red-600 hover:bg-red-100 rounded">
+                                    <Trash size={18} />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      This action cannot be undone. This will permanently delete the blog post.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction 
+                                      onClick={() => handleDeleteBlogPost(post.id)}
+                                      className="bg-red-600 text-white hover:bg-red-700"
+                                    >
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
                             </div>
                           </td>
                         </tr>

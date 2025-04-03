@@ -7,7 +7,6 @@ import {
   ShoppingCart,
   Users,
   FileText,
-  MessageSquare,
   Settings,
   LogOut,
   Menu,
@@ -116,17 +115,6 @@ const AdminLayout = () => {
             >
               <Users size={18} className="mr-3" />
               Customers
-            </Link>
-            <Link
-              to="/admin/comments"
-              className={`flex items-center px-4 py-3 rounded-md transition-colors ${
-                isActive("/admin/comments")
-                  ? "bg-coral text-white"
-                  : "hover:bg-gray-100"
-              }`}
-            >
-              <MessageSquare size={18} className="mr-3" />
-              Comments
             </Link>
             <Link
               to="/admin/settings"

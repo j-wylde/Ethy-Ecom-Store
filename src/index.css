@@ -81,10 +81,14 @@
   }
   
   .coral-button {
-    @apply bg-coral text-white py-2 px-6 rounded hover:bg-coral-dark transition-colors;
+    @apply bg-coral text-white py-2 px-6 rounded hover:bg-black transition-colors;
   }
 
   .coral-outline-button {
-    @apply border-2 border-coral text-coral py-2 px-6 rounded hover:bg-coral hover:text-white transition-colors;
+    @apply border-2 border-coral text-coral py-2 px-6 rounded hover:bg-black hover:text-white hover:border-black transition-colors;
+  }
+  
+  .section-title {
+    @apply text-2xl font-medium text-center mb-6;
   }
 }

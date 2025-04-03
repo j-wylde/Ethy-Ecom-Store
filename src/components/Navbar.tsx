@@ -20,7 +20,7 @@ const Navbar = () => {
   }, [location.pathname]);
 
   return (
-    <nav className="bg-white shadow-sm py-4">
+    <nav className="bg-coral shadow-sm py-4">
       <div className="container mx-auto flex justify-between items-center px-4">
         <div className="flex items-center">
           <Logo />
@@ -29,8 +29,8 @@ const Navbar = () => {
               <li className="mr-6">
                 <Link
                   to="/"
-                  className={`hover:text-coral ${
-                    location.pathname === "/" ? "text-coral" : ""
+                  className={`text-white hover:text-gray-200 ${
+                    location.pathname === "/" ? "font-bold" : ""
                   }`}
                 >
                   Home
@@ -39,8 +39,8 @@ const Navbar = () => {
               <li className="mr-6">
                 <Link
                   to="/shop"
-                  className={`hover:text-coral ${
-                    location.pathname === "/shop" ? "text-coral" : ""
+                  className={`text-white hover:text-gray-200 ${
+                    location.pathname === "/shop" ? "font-bold" : ""
                   }`}
                 >
                   Shop
@@ -49,8 +49,8 @@ const Navbar = () => {
               <li>
                 <Link
                   to="/blog"
-                  className={`hover:text-coral ${
-                    location.pathname === "/blog" ? "text-coral" : ""
+                  className={`text-white hover:text-gray-200 ${
+                    location.pathname === "/blog" ? "font-bold" : ""
                   }`}
                 >
                   Blog
@@ -63,7 +63,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <Button
               variant="ghost"
-              className="mr-4"
+              className="mr-4 text-white"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               <Menu />
@@ -77,19 +77,19 @@ const Navbar = () => {
             <CartIcon />
             {user ? (
               <>
-                <Button asChild variant="ghost">
+                <Button asChild variant="ghost" className="text-white">
                   <Link to="/account">Account</Link>
                 </Button>
-                <Button onClick={() => signOut()} variant="ghost">
+                <Button onClick={() => signOut()} variant="ghost" className="text-white">
                   Logout
                 </Button>
               </>
             ) : (
               <>
-                <Button asChild variant="ghost">
+                <Button asChild variant="ghost" className="text-white">
                   <Link to="/login">Login</Link>
                 </Button>
-                <Button asChild>
+                <Button asChild className="bg-white text-coral hover:bg-gray-100 hover:text-black">
                   <Link to="/register">Sign Up</Link>
                 </Button>
               </>
@@ -99,14 +99,14 @@ const Navbar = () => {
       </div>
       {/* Mobile Menu */}
       {isMobile && isMenuOpen && (
-        <div className="bg-white border-t mt-2">
+        <div className="bg-coral border-t mt-2">
           <div className="container mx-auto px-4 py-4">
             <ul className="space-y-4">
               <li>
                 <Link
                   to="/"
-                  className={`block py-2 hover:text-coral ${
-                    location.pathname === "/" ? "text-coral" : ""
+                  className={`block py-2 text-white hover:text-gray-200 ${
+                    location.pathname === "/" ? "font-bold" : ""
                   }`}
                 >
                   Home
@@ -115,8 +115,8 @@ const Navbar = () => {
               <li>
                 <Link
                   to="/shop"
-                  className={`block py-2 hover:text-coral ${
-                    location.pathname === "/shop" ? "text-coral" : ""
+                  className={`block py-2 text-white hover:text-gray-200 ${
+                    location.pathname === "/shop" ? "font-bold" : ""
                   }`}
                 >
                   Shop
@@ -125,8 +125,8 @@ const Navbar = () => {
               <li>
                 <Link
                   to="/blog"
-                  className={`block py-2 hover:text-coral ${
-                    location.pathname === "/blog" ? "text-coral" : ""
+                  className={`block py-2 text-white hover:text-gray-200 ${
+                    location.pathname === "/blog" ? "font-bold" : ""
                   }`}
                 >
                   Blog
@@ -137,8 +137,8 @@ const Navbar = () => {
                   <li>
                     <Link
                       to="/account"
-                      className={`block py-2 hover:text-coral ${
-                        location.pathname === "/account" ? "text-coral" : ""
+                      className={`block py-2 text-white hover:text-gray-200 ${
+                        location.pathname === "/account" ? "font-bold" : ""
                       }`}
                     >
                       Account
@@ -147,7 +147,7 @@ const Navbar = () => {
                   <li>
                     <button
                       onClick={() => signOut()}
-                      className="block py-2 hover:text-coral w-full text-left"
+                      className="block py-2 text-white hover:text-gray-200 w-full text-left"
                     >
                       Logout
                     </button>
@@ -158,8 +158,8 @@ const Navbar = () => {
                   <li>
                     <Link
                       to="/login"
-                      className={`block py-2 hover:text-coral ${
-                        location.pathname === "/login" ? "text-coral" : ""
+                      className={`block py-2 text-white hover:text-gray-200 ${
+                        location.pathname === "/login" ? "font-bold" : ""
                       }`}
                     >
                       Login
@@ -168,8 +168,8 @@ const Navbar = () => {
                   <li>
                     <Link
                       to="/register"
-                      className={`block py-2 hover:text-coral ${
-                        location.pathname === "/register" ? "text-coral" : ""
+                      className={`block py-2 text-white hover:text-gray-200 ${
+                        location.pathname === "/register" ? "font-bold" : ""
                       }`}
                     >
                       Sign Up
