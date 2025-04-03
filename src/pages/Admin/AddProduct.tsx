@@ -31,6 +31,7 @@ const AddProduct = () => {
     stock: "",
     category: "",
     featured: false,
+    image_url: null as string | null, // Add this line
   });
   const [images, setImages] = useState<FileList | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -54,7 +55,8 @@ const AddProduct = () => {
         price: product.price.toString(),
         stock: product.stock.toString(),
         category: product.category || "",
-        featured: false, // This would need to be added to your product schema if needed
+        featured: false,
+        image_url: product.image_url || null, // Add this line
       });
       
       if (product.image_url) {
@@ -105,6 +107,7 @@ const AddProduct = () => {
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock),
         category: formData.category,
+        image_url: formData.image_url || null, // Add this line
       };
       
       let savedProduct;
