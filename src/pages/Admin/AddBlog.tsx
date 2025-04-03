@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import { useCreateBlogPost } from "@/services/blogService";
 import { uploadProductImage } from "@/services/storageService";
 
@@ -19,6 +19,7 @@ const AddBlog = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { mutateAsync: createBlogPost } = useCreateBlogPost();
 
   const categories = [
@@ -58,13 +59,14 @@ const AddBlog = () => {
         imageUrl = await uploadProductImage(featuredImage, `blog_${blogId}`);
       }
       
-      // Create blog post
+      // Create blog post with author_id as a string, not a Promise
       const blogData = {
         title: formData.title,
         content: formData.content,
         published: formData.status === 'published',
         image_url: imageUrl,
-        author_id: supabase.auth.getSession().then(({ data }) => data.session?.user.id),
+        // Use the current user ID directly instead of a Promise
+        author_id: user?.id || null,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };

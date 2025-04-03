@@ -94,13 +94,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Check if the user was successfully created
       if (data?.user) {
         // Update the profiles table with the email
+        // Fixed: removed 'email' property which doesn't exist in the profiles table type
         const { error: profileError } = await supabase
           .from('profiles')
-          .update({ email: email })
+          .update({
+            first_name: name?.split(" ")[0],
+            last_name: name?.split(" ").slice(1).join(" ")
+          })
           .eq('id', data.user.id);
         
         if (profileError) {
-          console.error("Failed to update profile with email:", profileError);
+          console.error("Failed to update profile:", profileError);
         }
       }
 

@@ -72,13 +72,17 @@ export const useCreateBlogPost = () => {
   
   return useMutation({
     mutationFn: async (post: Omit<BlogPostType, "id">) => {
-      // Remove any Promise values (like author_id) and replace with null
+      // Remove any Promise values and replace with null
       const sanitizedPost = { ...post };
       
-      // Convert any Promise values to their resolved values or null
-      if (sanitizedPost.author_id instanceof Promise) {
+      // Fixed: Removed the instanceof check for Promise and replaced with proper handling
+      // Don't use instanceof for Promise checks - this causes a TypeScript error
+      if (typeof sanitizedPost.author_id === 'object' && sanitizedPost.author_id !== null) {
         try {
-          sanitizedPost.author_id = await sanitizedPost.author_id;
+          // If it's a Promise-like object with a then method
+          if ('then' in sanitizedPost.author_id) {
+            sanitizedPost.author_id = null;
+          }
         } catch {
           sanitizedPost.author_id = null;
         }
