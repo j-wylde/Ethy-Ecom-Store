@@ -128,7 +128,7 @@ const Checkout = () => {
         notes: formData.notes || "No additional notes",
       };
 
-      // Replace these IDs with your actual EmailJS service, template, and user IDs
+      // Using EmailJS to send the order confirmation email
       await emailjs.send(
         "service_id", // Your EmailJS service ID
         "template_id", // Your EmailJS template ID

@@ -14,6 +14,9 @@ export type ProductType = {
   updated_at: string;
 };
 
+// Re-export ProductType as Product for backward compatibility
+export type Product = ProductType;
+
 export const useProducts = (category?: string) => {
   return useQuery({
     queryKey: ["products", category],
@@ -71,6 +74,9 @@ export const useAddProduct = () => {
   });
 };
 
+// Alias for useAddProduct for backward compatibility
+export const useCreateProduct = useAddProduct;
+
 export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
   
@@ -127,5 +133,28 @@ export const useProductCategories = () => {
       const categories = [...new Set(data.map(item => item.category))];
       return categories.filter(Boolean).sort();
     },
+  });
+};
+
+// Add image upload function
+export const useUploadProductImage = () => {
+  return useMutation({
+    mutationFn: async (file: File) => {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+      const filePath = `products/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('products')
+        .upload(filePath, file);
+
+      if (uploadError) throw new Error(uploadError.message);
+
+      const { data } = supabase.storage
+        .from('products')
+        .getPublicUrl(filePath);
+
+      return data.publicUrl;
+    }
   });
 };
