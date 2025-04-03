@@ -73,26 +73,26 @@ const AdminLayout = () => {
               Dashboard
             </Link>
             <Link
-              to="/admin/products/add"
+              to="/admin/products"
               className={`flex items-center px-4 py-3 rounded-md transition-colors ${
-                isActive("/admin/products/add")
+                isActive("/admin/products")
                   ? "bg-coral text-white"
                   : "hover:bg-gray-100"
               }`}
             >
               <Package size={18} className="mr-3" />
-              Add Product
+              Products
             </Link>
             <Link
-              to="/admin/blog/add"
+              to="/admin/blog"
               className={`flex items-center px-4 py-3 rounded-md transition-colors ${
-                isActive("/admin/blog/add")
+                isActive("/admin/blog")
                   ? "bg-coral text-white"
                   : "hover:bg-gray-100"
               }`}
             >
               <FileText size={18} className="mr-3" />
-              Add Blog Post
+              Blog Posts
             </Link>
             <Link
               to="/admin/orders"
@@ -106,15 +106,15 @@ const AdminLayout = () => {
               Orders
             </Link>
             <Link
-              to="/admin/customers"
+              to="/admin/users"
               className={`flex items-center px-4 py-3 rounded-md transition-colors ${
-                isActive("/admin/customers")
+                isActive("/admin/users")
                   ? "bg-coral text-white"
                   : "hover:bg-gray-100"
               }`}
             >
               <Users size={18} className="mr-3" />
-              Customers
+              Users
             </Link>
             <Link
               to="/admin/settings"

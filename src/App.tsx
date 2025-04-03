@@ -30,6 +30,7 @@ import AdminDashboard from "./pages/Admin/Dashboard";
 import AddProduct from "./pages/Admin/AddProduct";
 import AddBlog from "./pages/Admin/AddBlog";
 import ProductManagement from "./pages/Admin/ProductManagement";
+import BlogManagement from "./pages/Admin/BlogManagement";
 import OrderManagement from "./pages/Admin/OrderManagement";
 import UserManagement from "./pages/Admin/UserManagement";
 
@@ -84,6 +85,7 @@ const App = () => (
                 <Route path="products" element={<ProductManagement />} />
                 <Route path="products/add" element={<AddProduct />} />
                 <Route path="products/edit/:id" element={<AddProduct />} />
+                <Route path="blog" element={<BlogManagement />} />
                 <Route path="blog/add" element={<AddBlog />} />
                 <Route path="blog/edit/:id" element={<AddBlog />} />
                 <Route path="orders" element={<OrderManagement />} />

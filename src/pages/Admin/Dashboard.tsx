@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Package, Pencil, Trash, ArrowUpRight, Eye, MessageSquare, Plus } from "lucide-react";
-import { useProducts } from "@/services/productService";
+import { useProducts, useDeleteProduct } from "@/services/productService";
 import { useAdminBlogPosts, useDeleteBlogPost } from "@/services/blogService";
 import { Button } from "@/components/ui/button";
 import { 
@@ -24,6 +24,7 @@ const AdminDashboard = () => {
   const { data: products = [], isLoading: isLoadingProducts } = useProducts();
   const { data: blogPosts = [], isLoading: isLoadingBlogPosts } = useAdminBlogPosts();
   const deleteBlogPost = useDeleteBlogPost();
+  const deleteProduct = useDeleteProduct();
   const { toast } = useToast();
   
   // Take the first 5 products and blog posts for the dashboard
@@ -41,6 +42,22 @@ const AdminDashboard = () => {
       toast({
         title: "Error",
         description: error.message || "Failed to delete blog post",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteProduct = async (id: string) => {
+    try {
+      await deleteProduct.mutateAsync(id);
+      toast({
+        title: "Success",
+        description: "Product deleted successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete product",
         variant: "destructive",
       });
     }
@@ -167,6 +184,30 @@ const AdminDashboard = () => {
                               <Link to={`/admin/products/edit/${product.id}`} className="p-1 text-amber-600 hover:bg-amber-100 rounded">
                                 <Pencil size={18} />
                               </Link>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button variant="ghost" className="p-1 text-red-600 hover:bg-red-100 rounded">
+                                    <Trash size={18} />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      This action cannot be undone. This will permanently delete the product.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction 
+                                      onClick={() => handleDeleteProduct(product.id)}
+                                      className="bg-red-600 text-white hover:bg-red-700"
+                                    >
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
                             </div>
                           </td>
                         </tr>

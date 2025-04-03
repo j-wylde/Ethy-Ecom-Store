@@ -62,6 +62,7 @@ const Checkout = () => {
         product_name: item.product.name
       }));
 
+      // This part was using RLS-protected table without proper permissions
       const { data: order, error: orderError } = await supabase
         .from("orders")
         .insert([{ 
@@ -72,7 +73,10 @@ const Checkout = () => {
         .select()
         .single();
 
-      if (orderError || !order) throw orderError || new Error("Failed to create order");
+      if (orderError || !order) {
+        console.error("Order creation error:", orderError);
+        throw orderError || new Error("Failed to create order");
+      }
 
       // Insert order items
       for (const item of orderItems) {
@@ -85,7 +89,10 @@ const Checkout = () => {
             price: item.price
           }]);
 
-        if (itemError) throw itemError;
+        if (itemError) {
+          console.error("Order item creation error:", itemError);
+          throw itemError;
+        }
       }
 
       // Send email using EmailJS
