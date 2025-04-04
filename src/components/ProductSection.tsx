@@ -19,7 +19,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="section-title text-center font-medium mb-8 text-base md:text-lg w-full mx-auto">{title}</h2>
+        <h2 className="section-title text-center font-medium mb-8 text-base md:text-lg lg:text-xl w-full mx-auto">{title}</h2>
         
         <ProductGrid category={category} limit={limit} />
         

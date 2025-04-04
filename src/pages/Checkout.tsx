@@ -9,7 +9,6 @@ import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import emailjs from "emailjs-com";
 
 type CheckoutFormData = {
   fullName: string;
@@ -62,7 +61,7 @@ const Checkout = () => {
         product_name: item.product.name
       }));
 
-      // This part was using RLS-protected table without proper permissions
+      // Create the order in Supabase
       const { data: order, error: orderError } = await supabase
         .from("orders")
         .insert([{ 
@@ -95,46 +94,29 @@ const Checkout = () => {
         }
       }
 
-      // Send email using EmailJS
-      const productsTable = items.map(item => 
-        `<tr>
-          <td style="padding: 8px; border: 1px solid #ddd;">${item.product.name}</td>
-          <td style="padding: 8px; border: 1px solid #ddd;">${item.quantity}</td>
-          <td style="padding: 8px; border: 1px solid #ddd;">$${item.product.price.toFixed(2)}</td>
-          <td style="padding: 8px; border: 1px solid #ddd;">$${(item.product.price * item.quantity).toFixed(2)}</td>
-        </tr>`
-      ).join("");
-
-      const emailParams = {
+      // Send email using Supabase Edge Function
+      const emailData = {
         to_email: "yung.jeri56@gmail.com",
         from_name: formData.fullName,
         from_email: formData.email,
         address: `${formData.address}, ${formData.city}, ${formData.state}, ${formData.zipCode}`,
-        order_details: `
-          <table style="width: 100%; border-collapse: collapse;">
-            <tr>
-              <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Product</th>
-              <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Quantity</th>
-              <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Price</th>
-              <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Total</th>
-            </tr>
-            ${productsTable}
-            <tr>
-              <td colspan="3" style="padding: 8px; border: 1px solid #ddd; text-align: right;"><strong>Total:</strong></td>
-              <td style="padding: 8px; border: 1px solid #ddd;">$${subtotal.toFixed(2)}</td>
-            </tr>
-          </table>
-        `,
+        order_details: items.map(item => ({
+          product_name: item.product.name,
+          quantity: item.quantity,
+          price: item.product.price
+        })),
+        total: subtotal,
         notes: formData.notes || "No additional notes",
       };
 
-      // Using EmailJS to send the order confirmation email
-      await emailjs.send(
-        "service_id", // Your EmailJS service ID
-        "template_id", // Your EmailJS template ID
-        emailParams,
-        "user_id" // Your EmailJS user ID
-      );
+      const { error: emailError } = await supabase.functions.invoke('send-order-email', {
+        body: emailData
+      });
+
+      if (emailError) {
+        console.error("Email sending error:", emailError);
+        // Continue with order confirmation even if email fails
+      }
 
       toast({
         title: "Order placed successfully!",

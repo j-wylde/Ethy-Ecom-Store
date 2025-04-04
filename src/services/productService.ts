@@ -1,73 +1,94 @@
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-export type ProductType = {
+export type Product = {
   id: string;
   name: string;
   description: string;
   price: number;
-  category: string;
-  image_url: string;
   stock: number;
-  shipping_fee?: number;  // Add optional shipping fee
+  image_url: string | null;
   created_at: string;
   updated_at: string;
+  category: string | null;
+  shipping_fee: number | null;
+  featured?: boolean;
 };
 
-// Re-export ProductType as Product for backward compatibility
-export type Product = ProductType;
-
-export const useProducts = (category?: string) => {
+// Fetch products
+export const useProducts = (category?: string, limit?: number, featured?: boolean) => {
   return useQuery({
-    queryKey: ["products", category],
+    queryKey: ["products", category, limit, featured],
     queryFn: async () => {
-      let query = supabase
-        .from("products")
-        .select("*")
-        .order("created_at", { ascending: false });
+      let query = supabase.from("products").select("*");
 
       if (category) {
         query = query.eq("category", category);
       }
 
-      const { data, error } = await query;
-      if (error) throw new Error(error.message);
-      return data as ProductType[];
+      if (featured) {
+        query = query.eq("featured", true);
+      }
+
+      if (limit) {
+        query = query.limit(limit);
+      }
+
+      const { data, error } = await query.order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching products:", error);
+        throw error;
+      }
+
+      return data as Product[];
     },
   });
 };
 
+// Fetch a single product
 export const useProduct = (id: string) => {
   return useQuery({
     queryKey: ["product", id],
     queryFn: async () => {
+      if (!id) return null;
+
       const { data, error } = await supabase
         .from("products")
         .select("*")
         .eq("id", id)
         .single();
 
-      if (error) throw new Error(error.message);
-      return data as ProductType;
+      if (error) {
+        console.error("Error fetching product:", error);
+        throw error;
+      }
+
+      return data as Product;
     },
     enabled: !!id,
   });
 };
 
-export const useAddProduct = () => {
+// Create a product
+export const useCreateProduct = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: async (product: Omit<ProductType, "id" | "created_at" | "updated_at">) => {
+    mutationFn: async (product: Omit<Product, "id" | "created_at" | "updated_at">) => {
       const { data, error } = await supabase
         .from("products")
         .insert([product])
         .select()
         .single();
 
-      if (error) throw new Error(error.message);
-      return data as ProductType;
+      if (error) {
+        console.error("Error creating product:", error);
+        throw error;
+      }
+
+      return data as Product;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
@@ -75,14 +96,12 @@ export const useAddProduct = () => {
   });
 };
 
-// Alias for useAddProduct for backward compatibility
-export const useCreateProduct = useAddProduct;
-
+// Update a product
 export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: async ({ id, product }: { id: string; product: Partial<ProductType> }) => {
+    mutationFn: async ({ id, product }: { id: string; product: Partial<Product> }) => {
       const { data, error } = await supabase
         .from("products")
         .update(product)
@@ -90,27 +109,33 @@ export const useUpdateProduct = () => {
         .select()
         .single();
 
-      if (error) throw new Error(error.message);
-      return data as ProductType;
+      if (error) {
+        console.error("Error updating product:", error);
+        throw error;
+      }
+
+      return data as Product;
     },
-    onSuccess: (data) => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      queryClient.invalidateQueries({ queryKey: ["product", data.id] });
+      queryClient.invalidateQueries({ queryKey: ["product", variables.id] });
     },
   });
 };
 
+// Delete a product
 export const useDeleteProduct = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from("products")
-        .delete()
-        .eq("id", id);
+      const { error } = await supabase.from("products").delete().eq("id", id);
 
-      if (error) throw new Error(error.message);
+      if (error) {
+        console.error("Error deleting product:", error);
+        throw error;
+      }
+
       return id;
     },
     onSuccess: () => {
@@ -119,43 +144,26 @@ export const useDeleteProduct = () => {
   });
 };
 
-export const useProductCategories = () => {
-  return useQuery({
-    queryKey: ["product-categories"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("products")
-        .select("category")
-        .not("category", "is", null);
-
-      if (error) throw new Error(error.message);
-      
-      // Get unique categories
-      const categories = [...new Set(data.map(item => item.category))];
-      return categories.filter(Boolean).sort();
-    },
-  });
-};
-
-// Add image upload function
+// Upload product image
 export const useUploadProductImage = () => {
   return useMutation({
-    mutationFn: async (file: File) => {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+    mutationFn: async ({ productId, imageFile }: { productId: string; imageFile: File }) => {
+      const fileExt = imageFile.name.split(".").pop();
+      const fileName = `${productId}-${Math.random().toString(36).substring(2)}.${fileExt}`;
       const filePath = `products/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
-        .from('products')
-        .upload(filePath, file);
+        .from("products")
+        .upload(filePath, imageFile);
 
-      if (uploadError) throw new Error(uploadError.message);
+      if (uploadError) {
+        console.error("Error uploading image:", uploadError);
+        throw uploadError;
+      }
 
-      const { data } = supabase.storage
-        .from('products')
-        .getPublicUrl(filePath);
+      const { data } = supabase.storage.from("products").getPublicUrl(filePath);
 
       return data.publicUrl;
-    }
+    },
   });
 };

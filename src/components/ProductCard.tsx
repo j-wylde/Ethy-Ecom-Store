@@ -17,10 +17,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
-    addToCart({ 
-      ...product, 
-      total_price: price + (shipping_fee || 0) 
-    }, 1);
+    addToCart(product, 1);
   };
 
   return (
