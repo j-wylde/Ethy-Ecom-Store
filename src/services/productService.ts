@@ -100,8 +100,12 @@ export const useCreateProduct = () => {
 export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async ({ id, product }: { id: string; product: Partial<Product> }) => {
+  return useMutation<
+    Product,
+    Error,
+    { id: string; product: Partial<Product> }
+  >({
+    mutationFn: async ({ id, product }) => {
       const { data, error } = await supabase
         .from("products")
         .update(product)
@@ -127,8 +131,8 @@ export const useUpdateProduct = () => {
 export const useDeleteProduct = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (id: string) => {
+  return useMutation<string, Error, string>({
+    mutationFn: async (id) => {
       const { error } = await supabase.from("products").delete().eq("id", id);
 
       if (error) {
@@ -146,8 +150,12 @@ export const useDeleteProduct = () => {
 
 // Upload product image
 export const useUploadProductImage = () => {
-  return useMutation({
-    mutationFn: async ({ productId, imageFile }: { productId: string; imageFile: File }) => {
+  return useMutation<
+    string, 
+    Error, 
+    { productId: string; imageFile: File }
+  >({
+    mutationFn: async ({ productId, imageFile }) => {
       const fileExt = imageFile.name.split(".").pop();
       const fileName = `${productId}-${Math.random().toString(36).substring(2)}.${fileExt}`;
       const filePath = `products/${fileName}`;
