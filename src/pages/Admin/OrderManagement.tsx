@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, ChevronLeft, ChevronRight, Eye } from "lucide-react";
@@ -16,6 +15,7 @@ type Order = {
   status: string;
   user_id: string;
   customer_name: string | null;
+  updated_at?: string | null;
 };
 
 const OrderManagement = () => {

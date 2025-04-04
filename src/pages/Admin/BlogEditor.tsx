@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { BlogPostType } from "@/components/BlogPost";
+import { useCreateBlogPost, useUpdateBlogPost } from "@/services/blogService";
 
 const BlogEditor = () => {
   const { id } = useParams();
@@ -28,6 +29,8 @@ const BlogEditor = () => {
   
   const { toast } = useToast();
   const navigate = useNavigate();
+  const createBlogPost = useCreateBlogPost();
+  const updateBlogPost = useUpdateBlogPost();
 
   // Fetch post data if in edit mode
   useEffect(() => {
@@ -132,7 +135,7 @@ const BlogEditor = () => {
         imageUrl = await uploadImage();
       }
       
-      const blogData: Partial<BlogPostType> = {
+      const blogData = {
         title: formData.title,
         content: formData.content,
         published: formData.published,
@@ -140,23 +143,17 @@ const BlogEditor = () => {
       };
       
       if (isEditMode && id) {
-        const { error } = await supabase
-          .from("blog_posts")
-          .update(blogData)
-          .eq("id", id);
-          
-        if (error) throw error;
+        await updateBlogPost.mutateAsync({
+          id,
+          ...blogData
+        });
         
         toast({
           title: "Success",
           description: "Blog post updated successfully."
         });
       } else {
-        const { error } = await supabase
-          .from("blog_posts")
-          .insert([blogData]);
-          
-        if (error) throw error;
+        await createBlogPost.mutateAsync(blogData);
         
         toast({
           title: "Success",
