@@ -104,9 +104,9 @@ export const useCreateProduct = () => {
 export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
 
-  // Fixed the excessive type depth by simplifying the type parameters
-  return useMutation({
-    mutationFn: async ({ id, product }: { id: string; product: Partial<Product> }) => {
+  // Fixed the type definition to avoid excessive depth
+  return useMutation<Product, Error, { id: string; product: Partial<Product> }>({
+    mutationFn: async ({ id, product }) => {
       const { data, error } = await supabase
         .from("products")
         .update(product)
