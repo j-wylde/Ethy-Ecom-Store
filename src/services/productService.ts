@@ -1,17 +1,26 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Product } from "@/integrations/supabase/types";
+import { Tables } from "@/integrations/supabase/types";
+
+// Define and export the Product type
+export type Product = Tables<"products">;
 
 // Fetch all products
-export const useProducts = () => {
+export const useProducts = (category?: string) => {
   return useQuery({
-    queryKey: ["products"],
+    queryKey: ["products", category],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("products")
         .select("*")
         .order("created_at", { ascending: false });
+      
+      if (category && category !== "All Products") {
+        query = query.eq("category", category);
+      }
+      
+      const { data, error } = await query;
 
       if (error) throw error;
       return data as Product[];
@@ -47,7 +56,7 @@ export const useCreateProduct = () => {
     mutationFn: async (product: Omit<Product, "id" | "created_at" | "updated_at">) => {
       const { data, error } = await supabase
         .from("products")
-        .insert([product])
+        .insert(product)
         .select()
         .single();
 
@@ -65,8 +74,7 @@ export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (params: { id: string; product: Partial<Product> }) => {
-      const { id, product } = params;
+    mutationFn: async ({ id, product }: { id: string; product: Partial<Product> }) => {
       const { data, error } = await supabase
         .from("products")
         .update(product)
@@ -118,5 +126,29 @@ export const useFeaturedProducts = (limit = 4) => {
       if (error) throw error;
       return data as Product[];
     },
+  });
+};
+
+// Upload product image - this function is needed for the AddProduct component
+export const useUploadProductImage = () => {
+  return useMutation({
+    mutationFn: async ({ productId, imageFile }: { productId: string; imageFile: File }) => {
+      const fileExt = imageFile.name.split('.').pop();
+      const filePath = `${productId}/${Date.now()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase
+        .storage
+        .from('products')
+        .upload(filePath, imageFile);
+        
+      if (uploadError) throw uploadError;
+      
+      const { data } = supabase
+        .storage
+        .from('products')
+        .getPublicUrl(filePath);
+        
+      return data.publicUrl;
+    }
   });
 };

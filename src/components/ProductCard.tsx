@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
-import type { Product } from "@/services/productService";
+import { Product } from "@/services/productService";
 import { useCart } from "@/contexts/CartContext";
 
 interface ProductCardProps {
