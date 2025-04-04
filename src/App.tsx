@@ -44,9 +44,9 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <CartProvider>
-          <BrowserRouter>
+      <BrowserRouter>
+        <AuthProvider>
+          <CartProvider>
             <Routes>
               {/* Public routes */}
               <Route path="/" element={<Layout />}>
@@ -105,10 +105,10 @@ function App() {
                 <Route path="blog/edit/:id" element={<BlogEditor />} />
               </Route>
             </Routes>
-          </BrowserRouter>
-          <Toaster />
-        </CartProvider>
-      </AuthProvider>
+            <Toaster />
+          </CartProvider>
+        </AuthProvider>
+      </BrowserRouter>
     </QueryClientProvider>
   );
 }

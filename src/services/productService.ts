@@ -1,97 +1,57 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { Product } from "@/integrations/supabase/types";
 
-export type Product = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  image_url: string | null;
-  created_at: string;
-  updated_at: string;
-  category: string | null;
-  shipping_fee: number | null;
-  featured?: boolean;
-};
-
-// Fetch products
-export const useProducts = (category?: string, limit?: number, featured?: boolean) => {
-  return useQuery<Product[], Error>({
-    queryKey: ["products", category, limit, featured],
+// Fetch all products
+export const useProducts = () => {
+  return useQuery({
+    queryKey: ["products"],
     queryFn: async () => {
-      let query = supabase.from("products").select("*");
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-      if (category) {
-        query = query.eq("category", category);
-      }
-
-      if (featured) {
-        query = query.eq("featured", true);
-      }
-
-      if (limit) {
-        query = query.limit(limit);
-      }
-
-      const { data, error } = await query.order("created_at", { ascending: false });
-
-      if (error) {
-        console.error("Error fetching products:", error);
-        throw error;
-      }
-
+      if (error) throw error;
       return data as Product[];
     },
   });
 };
 
-// Fetch a single product
-export const useProduct = (id: string) => {
-  return useQuery<Product | null, Error>({
-    queryKey: ["product", id],
+// Fetch a single product by ID
+export const useProduct = (id: string | undefined) => {
+  return useQuery({
+    queryKey: ["products", id],
     queryFn: async () => {
-      if (!id) return null;
-
+      if (!id) throw new Error("Product ID is required");
+      
       const { data, error } = await supabase
         .from("products")
         .select("*")
         .eq("id", id)
         .single();
 
-      if (error) {
-        console.error("Error fetching product:", error);
-        throw error;
-      }
-
+      if (error) throw error;
       return data as Product;
     },
     enabled: !!id,
   });
 };
 
-// Create a product
+// Create a new product
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<
-    Product, 
-    Error, 
-    Omit<Product, "id" | "created_at" | "updated_at">
-  >({
-    mutationFn: async (product) => {
+  return useMutation({
+    mutationFn: async (product: Omit<Product, "id" | "created_at" | "updated_at">) => {
       const { data, error } = await supabase
         .from("products")
         .insert([product])
         .select()
         .single();
 
-      if (error) {
-        console.error("Error creating product:", error);
-        throw error;
-      }
-
+      if (error) throw error;
       return data as Product;
     },
     onSuccess: () => {
@@ -100,11 +60,10 @@ export const useCreateProduct = () => {
   });
 };
 
-// Update a product
+// Update an existing product
 export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
 
-  // Fix for excessive type depth
   return useMutation({
     mutationFn: async (params: { id: string; product: Partial<Product> }) => {
       const { id, product } = params;
@@ -115,16 +74,12 @@ export const useUpdateProduct = () => {
         .select()
         .single();
 
-      if (error) {
-        console.error("Error updating product:", error);
-        throw error;
-      }
-
+      if (error) throw error;
       return data as Product;
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      queryClient.invalidateQueries({ queryKey: ["product", variables.id] });
+      queryClient.invalidateQueries({ queryKey: ["products", data.id] });
     },
   });
 };
@@ -133,15 +88,14 @@ export const useUpdateProduct = () => {
 export const useDeleteProduct = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<string, Error, string>({
-    mutationFn: async (id) => {
-      const { error } = await supabase.from("products").delete().eq("id", id);
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("products")
+        .delete()
+        .eq("id", id);
 
-      if (error) {
-        console.error("Error deleting product:", error);
-        throw error;
-      }
-
+      if (error) throw error;
       return id;
     },
     onSuccess: () => {
@@ -150,30 +104,19 @@ export const useDeleteProduct = () => {
   });
 };
 
-// Upload product image
-export const useUploadProductImage = () => {
-  return useMutation<
-    string, 
-    Error, 
-    { productId: string; imageFile: File }
-  >({
-    mutationFn: async ({ productId, imageFile }) => {
-      const fileExt = imageFile.name.split(".").pop();
-      const fileName = `${productId}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = `products/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
+// Featured products
+export const useFeaturedProducts = (limit = 4) => {
+  return useQuery({
+    queryKey: ["featuredProducts", limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
         .from("products")
-        .upload(filePath, imageFile);
+        .select("*")
+        .eq("featured", true)
+        .limit(limit);
 
-      if (uploadError) {
-        console.error("Error uploading image:", uploadError);
-        throw uploadError;
-      }
-
-      const { data } = supabase.storage.from("products").getPublicUrl(filePath);
-
-      return data.publicUrl;
+      if (error) throw error;
+      return data as Product[];
     },
   });
 };
