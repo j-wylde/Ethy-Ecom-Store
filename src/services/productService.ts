@@ -18,7 +18,7 @@ export type Product = {
 
 // Fetch products
 export const useProducts = (category?: string, limit?: number, featured?: boolean) => {
-  return useQuery({
+  return useQuery<Product[], Error>({
     queryKey: ["products", category, limit, featured],
     queryFn: async () => {
       let query = supabase.from("products").select("*");
@@ -49,7 +49,7 @@ export const useProducts = (category?: string, limit?: number, featured?: boolea
 
 // Fetch a single product
 export const useProduct = (id: string) => {
-  return useQuery({
+  return useQuery<Product | null, Error>({
     queryKey: ["product", id],
     queryFn: async () => {
       if (!id) return null;
@@ -75,8 +75,12 @@ export const useProduct = (id: string) => {
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (product: Omit<Product, "id" | "created_at" | "updated_at">) => {
+  return useMutation<
+    Product, 
+    Error, 
+    Omit<Product, "id" | "created_at" | "updated_at">
+  >({
+    mutationFn: async (product) => {
       const { data, error } = await supabase
         .from("products")
         .insert([product])
