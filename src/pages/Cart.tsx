@@ -8,8 +8,9 @@ import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/hooks/useAuth";
 
 const Cart = () => {
-  const { items, removeFromCart, updateQuantity, subtotal, totalItems } = useCart();
+  const { items, removeFromCart, updateQuantity, subtotal, totalItems, shippingFee } = useCart();
   const { user } = useAuth();
+  const total = subtotal + shippingFee;
 
   if (items.length === 0) {
     return (
@@ -133,12 +134,12 @@ const Cart = () => {
               </div>
               <div className="flex justify-between">
                 <span>Shipping:</span>
-                <span>Free</span>
+                <span>{shippingFee > 0 ? `$${shippingFee.toFixed(2)}` : "Free"}</span>
               </div>
               <Separator />
               <div className="flex justify-between text-lg font-bold">
                 <span>Total:</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>${total.toFixed(2)}</span>
               </div>
               <Button
                 className="w-full"

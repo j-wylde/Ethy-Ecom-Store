@@ -15,6 +15,7 @@ type Order = {
   total: number;
   status: string;
   user_id: string;
+  customer_name: string | null;
 };
 
 const OrderManagement = () => {
@@ -36,7 +37,8 @@ const OrderManagement = () => {
   
   const filteredOrders = orders?.filter(order => 
     order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    order.status.toLowerCase().includes(searchQuery.toLowerCase())
+    order.status.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (order.customer_name && order.customer_name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
   
   const pageSize = 10;
@@ -99,7 +101,7 @@ const OrderManagement = () => {
       <div className="relative max-w-md mx-auto mb-8">
         <Input
           type="text"
-          placeholder="Search orders by ID or status..."
+          placeholder="Search orders by ID, status, or customer name..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pr-10"
@@ -127,6 +129,7 @@ const OrderManagement = () => {
                 <thead>
                   <tr className="bg-gray-100">
                     <th className="p-3 text-left">Order ID</th>
+                    <th className="p-3 text-left">Customer</th>
                     <th className="p-3 text-left">Date</th>
                     <th className="p-3 text-right">Total</th>
                     <th className="p-3 text-center">Status</th>
@@ -137,6 +140,7 @@ const OrderManagement = () => {
                   {paginatedOrders?.map((order) => (
                     <tr key={order.id} className="border-t">
                       <td className="p-3 font-medium">{order.id.slice(0, 8)}...</td>
+                      <td className="p-3">{order.customer_name || 'Unknown'}</td>
                       <td className="p-3">{order.created_at ? formatDate(new Date(order.created_at)) : 'N/A'}</td>
                       <td className="p-3 text-right">{formatCurrency(order.total)}</td>
                       <td className="p-3 text-center">

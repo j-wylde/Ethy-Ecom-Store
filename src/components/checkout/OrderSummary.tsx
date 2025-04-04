@@ -6,9 +6,12 @@ import { CartItem } from "@/contexts/CartContext";
 type OrderSummaryProps = {
   items: CartItem[];
   subtotal: number;
+  shippingFee: number;
 };
 
-const OrderSummary: React.FC<OrderSummaryProps> = ({ items, subtotal }) => {
+const OrderSummary: React.FC<OrderSummaryProps> = ({ items, subtotal, shippingFee }) => {
+  const total = subtotal + shippingFee;
+
   return (
     <div className="bg-white rounded-lg shadow-sm p-6 sticky top-8">
       <h2 className="text-xl font-bold mb-4">Order Summary</h2>
@@ -31,12 +34,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ items, subtotal }) => {
         </div>
         <div className="flex justify-between">
           <span>Shipping:</span>
-          <span>Free</span>
+          <span>{shippingFee > 0 ? `$${shippingFee.toFixed(2)}` : "Free"}</span>
         </div>
         <Separator />
         <div className="flex justify-between text-lg font-bold">
           <span>Total:</span>
-          <span>${subtotal.toFixed(2)}</span>
+          <span>${total.toFixed(2)}</span>
         </div>
       </div>
     </div>

@@ -17,7 +17,7 @@ export type CheckoutFormData = {
 };
 
 export const useCheckout = () => {
-  const { items, subtotal, clearCart } = useCart();
+  const { items, subtotal, shippingFee, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -49,16 +49,20 @@ export const useCheckout = () => {
         product_id: item.product.id,
         quantity: item.quantity,
         price: item.product.price,
-        product_name: item.product.name
+        product_name: item.product.name,
+        shipping_fee: item.product.shipping_fee || 0
       }));
+
+      const total = subtotal + shippingFee;
 
       // Create the order in Supabase
       const { data: order, error: orderError } = await supabase
         .from("orders")
         .insert([{ 
           user_id: user.id, 
-          total: subtotal,
-          status: "paid" // In a real application, this would be set after payment processing
+          total: total,
+          status: "paid", // In a real application, this would be set after payment processing
+          customer_name: formData.fullName
         }])
         .select()
         .single();
@@ -76,7 +80,8 @@ export const useCheckout = () => {
             order_id: order.id,
             product_id: item.product_id,
             quantity: item.quantity,
-            price: item.price
+            price: item.price,
+            shipping_fee: item.shipping_fee
           }]);
 
         if (itemError) {
@@ -94,9 +99,12 @@ export const useCheckout = () => {
         order_details: items.map(item => ({
           product_name: item.product.name,
           quantity: item.quantity,
-          price: item.product.price
+          price: item.product.price,
+          shipping_fee: item.product.shipping_fee || 0
         })),
-        total: subtotal,
+        total: total,
+        subtotal: subtotal,
+        shipping_fee: shippingFee,
         notes: formData.notes || "No additional notes",
       };
 
@@ -131,6 +139,7 @@ export const useCheckout = () => {
   return {
     items,
     subtotal,
+    shippingFee,
     formData,
     isLoading,
     handleChange,

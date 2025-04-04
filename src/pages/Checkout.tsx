@@ -13,6 +13,7 @@ const Checkout = () => {
     formData, 
     isLoading, 
     subtotal,
+    shippingFee,
     handleChange, 
     handleSubmit 
   } = useCheckout();
@@ -37,7 +38,11 @@ const Checkout = () => {
         </div>
 
         <div className="lg:col-span-1">
-          <OrderSummary items={items} subtotal={subtotal} />
+          <OrderSummary 
+            items={items} 
+            subtotal={subtotal} 
+            shippingFee={shippingFee}
+          />
         </div>
       </div>
     </div>

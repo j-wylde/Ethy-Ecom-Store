@@ -54,10 +54,14 @@ const AdminLayout = () => {
       >
         <div className="flex flex-col h-full">
           <div className="p-4 border-b">
-            <Link to="/" className="flex items-center">
-              <Logo />
-              <span className="ml-2 text-lg font-medium">Admin Panel</span>
-            </Link>
+            <div className="flex items-center">
+              <img 
+                src="/lovable-uploads/6a6469b2-e641-48f7-8d02-eb5409ddf11c.png" 
+                alt="ENY Skin Logo" 
+                className="h-8 mr-2" 
+              />
+              <span className="text-xl font-medium">Admin Panel</span>
+            </div>
           </div>
 
           <nav className="flex-1 p-4 space-y-1">
