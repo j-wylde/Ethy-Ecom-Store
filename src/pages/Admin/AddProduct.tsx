@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -31,7 +30,8 @@ const AddProduct = () => {
     stock: "",
     category: "",
     featured: false,
-    image_url: null as string | null, // Add this line
+    image_url: null as string | null,
+    shipping_fee: "",
   });
   const [images, setImages] = useState<FileList | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -46,7 +46,6 @@ const AddProduct = () => {
   
   const isLoading = isCreating || isUpdating || isUploading || isProductLoading;
 
-  // Load product data if in edit mode
   useEffect(() => {
     if (isEditMode && product) {
       setFormData({
@@ -56,7 +55,8 @@ const AddProduct = () => {
         stock: product.stock.toString(),
         category: product.category || "",
         featured: false,
-        image_url: product.image_url || null, // Add this line
+        image_url: product.image_url || null,
+        shipping_fee: product.shipping_fee || "",
       });
       
       if (product.image_url) {
@@ -86,7 +86,6 @@ const AddProduct = () => {
     if (e.target.files && e.target.files.length > 0) {
       setImages(e.target.files);
       
-      // Create a preview
       const file = e.target.files[0];
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -100,20 +99,19 @@ const AddProduct = () => {
     e.preventDefault();
     
     try {
-      // Format the data
       const productData = {
         name: formData.name,
         description: formData.description,
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock),
         category: formData.category,
-        image_url: formData.image_url || null, // Add this line
+        image_url: formData.image_url || null,
+        shipping_fee: parseFloat(formData.shipping_fee || "0"),
       };
       
       let savedProduct;
       
       if (isEditMode && id) {
-        // Update existing product
         savedProduct = await updateProduct({
           id,
           ...productData,
@@ -124,7 +122,6 @@ const AddProduct = () => {
           description: "Product updated successfully.",
         });
       } else {
-        // Create new product
         savedProduct = await createProduct(productData);
         
         toast({
@@ -133,14 +130,12 @@ const AddProduct = () => {
         });
       }
       
-      // Upload image if provided
       if (images && images.length > 0 && savedProduct) {
         const imageUrl = await uploadImage({ 
           file: images[0], 
           productId: savedProduct.id 
         });
         
-        // Update product with image URL
         await updateProduct({
           id: savedProduct.id,
           image_url: imageUrl
@@ -158,7 +153,6 @@ const AddProduct = () => {
     }
   };
 
-  // Page title based on mode
   const pageTitle = isEditMode ? "Edit Product" : "Add New Product";
   const submitButtonText = isEditMode 
     ? (isLoading ? "Updating Product..." : "Update Product")
@@ -292,6 +286,22 @@ const AddProduct = () => {
               <p className="text-xs text-gray-500">
                 Upload a high-quality image of your product.
               </p>
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="shipping_fee" className="block text-sm font-medium">
+                Shipping Fee (₦)
+              </label>
+              <input
+                type="number"
+                id="shipping_fee"
+                name="shipping_fee"
+                min="0"
+                step="0.01"
+                className="w-full p-2 border rounded-md focus:ring-coral focus:border-coral"
+                value={formData.shipping_fee}
+                onChange={handleChange}
+              />
             </div>
 
             <div className="flex items-center">

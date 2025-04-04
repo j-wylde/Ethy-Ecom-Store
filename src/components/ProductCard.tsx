@@ -12,12 +12,15 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { id, name, price, image_url, description } = product;
+  const { id, name, price, image_url, description, shipping_fee } = product;
   const { addToCart } = useCart();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
-    addToCart(product, 1);
+    addToCart({ 
+      ...product, 
+      total_price: price + (shipping_fee || 0) 
+    }, 1);
   };
 
   return (

@@ -10,6 +10,7 @@ export type ProductType = {
   category: string;
   image_url: string;
   stock: number;
+  shipping_fee?: number;  // Add optional shipping fee
   created_at: string;
   updated_at: string;
 };
