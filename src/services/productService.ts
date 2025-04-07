@@ -4,7 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
 
 // Define and export the Product type
-export type Product = Tables<"products">;
+export type Product = Tables<"products"> & {
+  featured?: boolean;
+};
 
 // Fetch all products
 export const useProducts = (category?: string) => {
@@ -69,7 +71,7 @@ export const useCreateProduct = () => {
   });
 };
 
-// Update an existing product
+// Update an existing product - fixed type instantiation issue
 export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
 
@@ -129,7 +131,7 @@ export const useFeaturedProducts = (limit = 4) => {
   });
 };
 
-// Upload product image - this function is needed for the AddProduct component
+// Upload product image
 export const useUploadProductImage = () => {
   return useMutation({
     mutationFn: async ({ productId, imageFile }: { productId: string; imageFile: File }) => {
