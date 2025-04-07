@@ -1,58 +1,4 @@
 
-
-// export default function NavbarDrop(): JSX.Element {
-//   const [hovering, setHovering] = useState(false);
-
-
-//   return (
-//     <div
-//       className="relative inline-block"
-//       onMouseEnter={() => setHovering(true)}
-//       onMouseLeave={() => setHovering(false)}
-//     >
-//       <div className="inline-flex items-center gap-1  cursor-pointer rounded-md">
-//         Categories
-//         <ChevronDown className="w-4 h-4" />
-//       </div>
-
-//       {hovering && (
-//         <div className="absolute top-full left-0 min-w-[150px] rounded-md bg-white p-2 shadow-lg border border-gray-200 z-50">
-//           <Link
-//             to="/categories/body-care"
-//             className="block text-black px-3 py-2 rounded hover:text-coral font-normal"
-//           >
-//             BODY CARE
-//           </Link>
-//           <Link
-//             to="/categories/facial-care"
-//             className="block text-black px-3 py-2 rounded hover:text-coral font-normal"
-//           >
-//             FACIAL CARE
-//           </Link>
-//           <Link
-//             to="/categories/lip-care"
-//             className="block text-black px-3 py-2 rounded hover:text-coral font-normal"
-//           >
-//             LIP CARE
-//           </Link>
-//           <Link
-//             to="/categories/intimate-care"
-//             className="block text-black px-3 py-2 rounded hover:text-coral font-normal"
-//           >
-//             INTIMATE CARE
-//           </Link>
-//           <Link
-//             to="/categories/skincare"
-//             className="block text-black px-3 py-2 rounded hover:text-coral font-normal"
-//           >
-//             SKIN CARE
-//           </Link>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-
 'use client';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { ChevronDown } from 'lucide-react';
@@ -70,11 +16,11 @@ const NavbarMenu = () => {
           </NavigationMenu.Trigger>
           <NavigationMenu.Content className="absolute top-full left-0 mt-2 bg-white shadow-lg rounded-md p-4 w-56">
             <ul className="space-y-2">
-              <NavItem to="/category/body-care" title="BODY CARE" />
-              <NavItem to="/categories/facial-care" title="FACIAL CARE" />
-              <NavItem to="/categories/lip-care" title="LIP CARE" />
-              <NavItem to="/categories/intimate-care" title="INTIMATE CARE" />
-              <NavItem to="/categories/skincare" title="SKIN CARE" />
+              <NavItem to="/shop?category=Body Care" title="BODY CARE" />
+              <NavItem to="/shop?category=Facial Care" title="FACIAL CARE" />
+              <NavItem to="/shop?category=Lip Care" title="LIP CARE" />
+              <NavItem to="/shop?category=Intimate Care" title="INTIMATE CARE" />
+              <NavItem to="/shop?category=Skincare Sets" title="SKIN CARE" />
             </ul>
           </NavigationMenu.Content>
         </NavigationMenu.Item>

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
@@ -14,15 +15,38 @@ const categories = [
 ];
 
 const Shop = () => {
-  const [activeCategory, setActiveCategory] = useState("All Products");
+  const location = useLocation();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All Products");
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const categoryParam = params.get("category");
+    
+    if (categoryParam && categories.includes(categoryParam)) {
+      setActiveCategory(categoryParam);
+    }
+  }, [location.search]);
+
+  const handleCategoryChange = (category: string) => {
+    setActiveCategory(category);
+    const params = new URLSearchParams();
+    if (category !== "All Products") {
+      params.set("category", category);
+    }
+    navigate({ search: params.toString() });
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+  };
 
   return (
     <div className="container mx-auto px-4 py-12">
       <h1 className="text-4xl font-bold mb-8 text-center">Shop Our Products</h1>
       
-      {/* Search Bar */}
-      <div className="relative max-w-md mx-auto mb-8">
+      <form onSubmit={handleSearch} className="relative max-w-md mx-auto mb-8">
         <Input
           type="text"
           placeholder="Search products..."
@@ -30,16 +54,17 @@ const Shop = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pr-10"
         />
-        <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-      </div>
+        <button type="submit" className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 bg-transparent border-none">
+          <Search size={18} />
+        </button>
+      </form>
       
-      {/* Category Filters */}
       <div className="flex flex-wrap gap-2 mb-8 justify-center">
         {categories.map((category) => (
           <Button
             key={category}
             variant={activeCategory === category ? "default" : "outline"}
-            onClick={() => setActiveCategory(category)}
+            onClick={() => handleCategoryChange(category)}
             className={activeCategory === category ? "mb-2 uppercase bg-coral": "mb-2 uppercase"}
           >
             {category}
@@ -47,9 +72,9 @@ const Shop = () => {
         ))}
       </div>
       
-      {/* Products Grid */}
       <ProductGrid 
-        category={activeCategory === "All Products" ? undefined : activeCategory} 
+        category={activeCategory === "All Products" ? undefined : activeCategory}
+        searchQuery={searchQuery}
       />
     </div>
   );

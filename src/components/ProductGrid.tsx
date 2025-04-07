@@ -6,10 +6,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 interface ProductGridProps {
   category?: string;
   limit?: number;
+  searchQuery?: string;
 }
 
-const ProductGrid: React.FC<ProductGridProps> = ({ category, limit }) => {
-  const { data: products, isLoading, error } = useProducts(category);
+const ProductGrid: React.FC<ProductGridProps> = ({ category, limit, searchQuery }) => {
+  const { data: products, isLoading, error } = useProducts(category, searchQuery);
   
   if (error) {
     return (

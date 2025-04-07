@@ -9,9 +9,9 @@ export type Product = Tables<"products"> & {
 };
 
 // Fetch all products
-export const useProducts = (category?: string) => {
+export const useProducts = (category?: string, searchQuery?: string) => {
   return useQuery({
-    queryKey: ["products", category],
+    queryKey: ["products", category, searchQuery],
     queryFn: async () => {
       let query = supabase
         .from("products")
@@ -20,6 +20,10 @@ export const useProducts = (category?: string) => {
       
       if (category && category !== "All Products") {
         query = query.eq("category", category);
+      }
+      
+      if (searchQuery && searchQuery.trim() !== "") {
+        query = query.ilike("name", `%${searchQuery}%`);
       }
       
       const { data, error } = await query;
@@ -33,7 +37,7 @@ export const useProducts = (category?: string) => {
 // Fetch a single product by ID
 export const useProduct = (id: string | undefined) => {
   return useQuery({
-    queryKey: ["products", id],
+    queryKey: ["product", id],
     queryFn: async () => {
       if (!id) throw new Error("Product ID is required");
       
@@ -71,7 +75,7 @@ export const useCreateProduct = () => {
   });
 };
 
-// Update an existing product - fixed type instantiation issue
+// Update an existing product
 export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
 
@@ -89,7 +93,7 @@ export const useUpdateProduct = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      queryClient.invalidateQueries({ queryKey: ["products", data.id] });
+      queryClient.invalidateQueries({ queryKey: ["product", data.id] });
     },
   });
 };

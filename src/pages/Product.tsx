@@ -9,8 +9,8 @@ import { useCart } from "@/contexts/CartContext";
 import { ShoppingCart } from "lucide-react";
 
 const Product = () => {
-  const { slug } = useParams<{ slug: string }>();
-  const { data: product, isLoading, error } = useProduct(slug || "");
+  const { id } = useParams<{ id: string }>();
+  const { data: product, isLoading, error } = useProduct(id);
   const [quantity, setQuantity] = useState(1);
   const { toast } = useToast();
   const { addToCart } = useCart();
@@ -25,6 +25,10 @@ const Product = () => {
   const handleAddToCart = () => {
     if (product) {
       addToCart(product, quantity);
+      toast({
+        title: "Added to cart",
+        description: `${quantity} ${quantity > 1 ? 'items' : 'item'} added to your cart`,
+      });
     }
   };
 
@@ -53,6 +57,7 @@ const Product = () => {
         <div className="text-center">
           <h2 className="text-2xl font-bold">Product not found</h2>
           <p className="mt-2 text-gray-600">The product you're looking for doesn't exist or has been removed.</p>
+          <p className="mt-2 text-sm text-gray-500">Error: {error?.message || "Unknown error"}</p>
         </div>
       </div>
     );
@@ -73,7 +78,7 @@ const Product = () => {
         {/* Product Details */}
         <div>
           <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-          <p className="text-2xl font-bold text-coral mb-4">${product.price.toFixed(2)}</p>
+          <p className="text-2xl font-bold text-coral mb-4">${product.price?.toFixed(2)}</p>
           <p className="text-gray-700 mb-6">{product.description || "No description available."}</p>
           
           {/* Quantity Selector */}
