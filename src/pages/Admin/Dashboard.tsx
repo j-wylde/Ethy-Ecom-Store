@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Package, Pencil, Trash, ArrowUpRight, Eye, MessageSquare, Plus } from "lucide-react";
+import { Package, Pencil, ArrowUpRight, Eye, MessageSquare, Plus, Trash2 } from "lucide-react";
 import { useProducts, useDeleteProduct } from "@/services/productService";
 import { useAdminBlogPosts, useDeleteBlogPost } from "@/services/blogService";
 import { Button } from "@/components/ui/button";
@@ -84,7 +84,7 @@ const AdminDashboard = () => {
           <CardContent>
             <div className="text-2xl font-bold">{products.length}</div>
             <p className="text-xs text-muted-foreground">Total products</p>
-            <Button asChild className="mt-4 w-full coral-button">
+            <Button asChild className="mt-4 w-full bg-coral">
               <Link to="/admin/products">View All Products</Link>
             </Button>
           </CardContent>
@@ -101,7 +101,7 @@ const AdminDashboard = () => {
           <CardContent>
             <div className="text-2xl font-bold">{blogPosts.length}</div>
             <p className="text-xs text-muted-foreground">Published posts</p>
-            <Button asChild className="mt-4 w-full coral-button">
+            <Button asChild className="mt-4 w-full bg-coral">
               <Link to="/admin/blog">View All Posts</Link>
             </Button>
           </CardContent>
@@ -115,7 +115,7 @@ const AdminDashboard = () => {
             </div>
           </CardHeader>
           <CardContent className="space-y-2">
-            <Button asChild className="w-full justify-start">
+            <Button asChild className="w-full justify-start bg-coral">
               <Link to="/admin/products/add" className="flex items-center">
                 <Plus size={16} className="mr-2" />
                 Add New Product
@@ -186,8 +186,8 @@ const AdminDashboard = () => {
                               </Link>
                               <AlertDialog>
                                 <AlertDialogTrigger asChild>
-                                  <Button variant="ghost" className="p-1 text-red-600 hover:bg-red-100 rounded">
-                                    <Trash size={18} />
+                                  <Button size='icon' variant="ghost" className="p-1 text-red-600 hover:text-red-800 hover:bg-red-100 rounded">
+                                    <Trash2 size={18} />
                                   </Button>
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
@@ -273,8 +273,8 @@ const AdminDashboard = () => {
                               </Link>
                               <AlertDialog>
                                 <AlertDialogTrigger asChild>
-                                  <Button variant="ghost" className="p-1 text-red-600 hover:bg-red-100 rounded">
-                                    <Trash size={18} />
+                                  <Button size="icon" variant="ghost" className="p-1 text-red-600 hover:text-red-800 hover:bg-red-100 rounded">
+                                    <Trash2 size={18} />
                                   </Button>
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>

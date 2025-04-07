@@ -20,7 +20,7 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				sans: ['Montserrat', 'sans-serif'],
+				sans: ['"Montserrat", Arial, Helvetica, sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -28,11 +28,12 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
-				coral: {
-					DEFAULT: '#e38b98',
-					light: '#f5ced3',
-					dark: '#c46b78',
-				},
+				coral: '#F2928F',
+				// {
+				// 	// DEFAULT: '#e38b98',
+				// 	// light: '#f5ced3',
+				// 	dark: 
+				// },
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'

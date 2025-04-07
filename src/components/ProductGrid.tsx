@@ -1,5 +1,4 @@
 
-import React from "react";
 import { useProducts } from "@/services/productService";
 import ProductCard from "@/components/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -15,7 +14,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ category, limit }) => {
   if (error) {
     return (
       <div className="text-center py-12">
-        <p className="text-red-500">Failed to load products. Please try again later.</p>
+        <p className="text-red-500 font-semibold">Failed to load products. Please try again later.</p>
       </div>
     );
   }

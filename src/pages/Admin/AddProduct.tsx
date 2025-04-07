@@ -12,12 +12,11 @@ import {
 } from "@/services/productService";
 
 const categories = [
+  "Body Care",
+  "Facial Care",
   "Lip Care",
-  "Skincare Devices",
-  "Treatment & Care",
-  "Sets",
-  "Gift Items",
-  "EnySkin Extra",
+  "Intimate Care",
+  "Skincare Sets",
 ];
 
 const AddProduct = () => {

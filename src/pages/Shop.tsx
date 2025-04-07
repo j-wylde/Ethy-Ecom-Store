@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
@@ -7,10 +6,11 @@ import ProductGrid from "@/components/ProductGrid";
 
 const categories = [
   "All Products",
-  "Face Care", 
   "Body Care", 
-  "Hair Care", 
-  "Best Sellers"
+  "Facial Care", 
+  "Lip Care", 
+  "Intimate Care",
+  "Skincare Sets",
 ];
 
 const Shop = () => {
@@ -40,7 +40,7 @@ const Shop = () => {
             key={category}
             variant={activeCategory === category ? "default" : "outline"}
             onClick={() => setActiveCategory(category)}
-            className="mb-2"
+            className={activeCategory === category ? "mb-2 uppercase bg-coral": "mb-2 uppercase"}
           >
             {category}
           </Button>

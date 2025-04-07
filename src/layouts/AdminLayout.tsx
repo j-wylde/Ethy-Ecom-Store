@@ -56,8 +56,8 @@ const AdminLayout = () => {
           <div className="p-4 border-b">
             <div className="flex items-center">
               <img 
-                src="/lovable-uploads/6a6469b2-e641-48f7-8d02-eb5409ddf11c.png" 
-                alt="ENY Skin Logo" 
+                src="/IMG_4750.PNG" 
+                alt="ETHY Logo" 
                 className="h-8 mr-2" 
               />
               <span className="text-xl font-medium">Admin Panel</span>

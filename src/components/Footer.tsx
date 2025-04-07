@@ -1,7 +1,6 @@
 
 import { Link } from "react-router-dom";
 import { Instagram, MessageCircle, ArrowUp } from "lucide-react";
-import Logo from "./Logo";
 
 const Footer = () => {
   const scrollToTop = () => {
@@ -25,9 +24,9 @@ const Footer = () => {
                 <MessageCircle size={20} />
               </a>
             </div>
-            <p className="mb-2">Abuja, Nigeria.</p>
-            <p className="mb-2">(+234)-807 834 7384</p>
-            <p>info@enyskinco.com</p>
+            <p className="mb-2 text-white">Lagos, Nigeria.</p>
+            <p className="mb-2 text-white">[phone number]</p>
+            <p className="text-white">[email here]</p>
           </div>
           
           <div>

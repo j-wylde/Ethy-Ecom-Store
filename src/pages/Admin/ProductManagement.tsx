@@ -13,7 +13,7 @@ const ProductManagement = () => {
     <div className="container mx-auto py-10 px-4">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
         <h1 className="text-3xl font-semibold">Product Management</h1>
-        <Button asChild className="coral-button">
+        <Button asChild className="bg-coral">
           <Link to="/admin/products/add">
             <Plus size={16} className="mr-2" /> Add New Product
           </Link>

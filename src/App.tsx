@@ -25,6 +25,7 @@ import Register from "@/pages/Register";
 import Account from "@/pages/Account";
 import OrderSuccess from "@/pages/OrderSuccess";
 import NotFound from "@/pages/NotFound";
+import About from "@/pages/About";
 
 // Admin pages
 import AdminDashboard from "@/pages/Admin/Dashboard";
@@ -51,6 +52,7 @@ function App() {
               {/* Public routes */}
               <Route path="/" element={<Layout />}>
                 <Route index element={<Index />} />
+                <Route path="about" element={<About/>}/>
                 <Route path="shop" element={<Shop />} />
                 <Route path="products/:id" element={<Product />} />
                 <Route path="cart" element={<Cart />} />

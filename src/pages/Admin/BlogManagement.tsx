@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash, Eye, Plus } from "lucide-react";
+import { Pencil, Trash2, Eye, Plus } from "lucide-react";
 import { useAdminBlogPosts, useDeleteBlogPost } from "@/services/blogService";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -128,8 +128,8 @@ const BlogManagement = () => {
                         </Link>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button variant="ghost" className="p-1 text-red-600 hover:bg-red-100 rounded">
-                              <Trash size={18} />
+                            <Button size="icon" variant="ghost" className="p-1 text-red-600 hover:text-red-800 hover:bg-red-100 rounded">
+                              <Trash2 size={18} />
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
