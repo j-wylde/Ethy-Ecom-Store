@@ -36,7 +36,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <p className="text-sm text-gray-600 line-clamp-2 mb-2">
           {description || "No description available"}
         </p>
-        <p className="font-bold text-lg">${price.toFixed(2)}</p>
+        <p className="font-bold text-lg">₦{price.toFixed(2)}</p>
       </CardContent>
       <CardFooter className="p-4 pt-0 flex gap-2">
         <Button asChild variant="outline" className="w-full">

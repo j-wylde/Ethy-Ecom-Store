@@ -39,8 +39,8 @@ const handler = async (req: Request): Promise<Response> => {
       `<tr>
         <td style="padding: 8px; border: 1px solid #ddd;">${item.product_name}</td>
         <td style="padding: 8px; border: 1px solid #ddd;">${item.quantity}</td>
-        <td style="padding: 8px; border: 1px solid #ddd;">$${item.price.toFixed(2)}</td>
-        <td style="padding: 8px; border: 1px solid #ddd;">$${(item.price * item.quantity).toFixed(2)}</td>
+        <td style="padding: 8px; border: 1px solid #ddd;">₦${item.price.toFixed(2)}</td>
+        <td style="padding: 8px; border: 1px solid #ddd;">₦${(item.price * item.quantity).toFixed(2)}</td>
       </tr>`
     ).join("");
 
@@ -65,7 +65,7 @@ const handler = async (req: Request): Promise<Response> => {
           ${productsTable}
           <tr>
             <td colspan="3" style="padding: 8px; border: 1px solid #ddd; text-align: right;"><strong>Total:</strong></td>
-            <td style="padding: 8px; border: 1px solid #ddd;">$${data.total.toFixed(2)}</td>
+            <td style="padding: 8px; border: 1px solid #ddd;">₦${data.total.toFixed(2)}</td>
           </tr>
         </table>
         
@@ -95,7 +95,7 @@ const handler = async (req: Request): Promise<Response> => {
           ${productsTable}
           <tr>
             <td colspan="3" style="padding: 8px; border: 1px solid #ddd; text-align: right;"><strong>Total:</strong></td>
-            <td style="padding: 8px; border: 1px solid #ddd;">$${data.total.toFixed(2)}</td>
+            <td style="padding: 8px; border: 1px solid #ddd;">₦${data.total.toFixed(2)}</td>
           </tr>
         </table>
         

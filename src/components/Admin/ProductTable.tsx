@@ -143,7 +143,7 @@ const ProductTable = ({ searchQuery = "" }: ProductTableProps) => {
                   </div>
                 </td>
                 <td className="p-3">{product.category || "Uncategorized"}</td>
-                <td className="p-3 text-right">${product.price.toFixed(2)}</td>
+                <td className="p-3 text-right">₦{product.price.toFixed(2)}</td>
                 <td className="p-3 text-right">
                   <span
                     className={`px-2 py-1 rounded text-xs ${

@@ -6,31 +6,31 @@ const categories = [
     id: 2,
     name: "BODY CARE",
     image: "/imgs/bodycare.jpg",
-    link: "/categories/body-care",
+    link: "category=Body%20Care",
   },
   {
     id: 1,
     name: "FACIAL CARE",
     image: "/imgs/facialcare.jpg",
-    link: "/categories/facial-care",
+    link: "category=Facial%20Care",
   },
   {
     id: 3,
     name: "LIP CARE",
     image: "/imgs/lipcare.jpg",
-    link: "/categories/lip-care",
+    link: "category=Lip%20Care",
   },
   {
     id: 4,
     name: "INTIMATE CARE",
     image: "/imgs/intimate.jpeg",
-    link: "/categories/intimate",
+    link: "category=Intimate%20Care",
   },
   {
     id: 5,
     name: "SKINCARE SETS",
     image: "/imgs/skincare.jpg",
-    link: "/categories/skincare",
+    link: "category=Skin%20Care",
   },
 ];
 
@@ -45,7 +45,7 @@ const CategorySection = () => {
           {categories.map((category) => (
             <Link 
               key={category.id}
-              to={category.link}
+              to={`shop?${category.link}`}
               className="category-item"
             >
               <div className="relative overflow-hidden rounded-lg h-48">

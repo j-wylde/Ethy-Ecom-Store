@@ -24,22 +24,22 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ items, subtotal, shippingFe
                 Qty: {item.quantity}
               </span>
             </div>
-            <span>${(item.product.price * item.quantity).toFixed(2)}</span>
+            <span>₦{(item.product.price * item.quantity).toFixed(2)}</span>
           </div>
         ))}
         <Separator />
         <div className="flex justify-between">
           <span>Subtotal:</span>
-          <span>${subtotal.toFixed(2)}</span>
+          <span>₦{subtotal.toFixed(2)}</span>
         </div>
         <div className="flex justify-between">
           <span>Shipping:</span>
-          <span>{shippingFee > 0 ? `$${shippingFee.toFixed(2)}` : "Free"}</span>
+          <span>{shippingFee > 0 ? `₦${shippingFee.toFixed(2)}` : "Free"}</span>
         </div>
         <Separator />
         <div className="flex justify-between text-lg font-bold">
           <span>Total:</span>
-          <span>${total.toFixed(2)}</span>
+          <span>₦{total.toFixed(2)}</span>
         </div>
       </div>
     </div>

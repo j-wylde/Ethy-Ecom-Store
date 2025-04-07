@@ -174,7 +174,7 @@ const AdminDashboard = () => {
                         <tr key={product.id} className="border-t">
                           <td className="p-3 font-medium">{product.name}</td>
                           <td className="p-3">{product.category || "Uncategorized"}</td>
-                          <td className="p-3 text-right">${product.price.toFixed(2)}</td>
+                          <td className="p-3 text-right">₦{product.price.toFixed(2)}</td>
                           <td className="p-3 text-right">{product.stock}</td>
                           <td className="p-3">
                             <div className="flex justify-center space-x-2">

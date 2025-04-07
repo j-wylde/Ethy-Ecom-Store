@@ -78,7 +78,7 @@ const Product = () => {
         {/* Product Details */}
         <div>
           <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-          <p className="text-2xl font-bold text-coral mb-4">${product.price?.toFixed(2)}</p>
+          <p className="text-2xl font-bold text-coral mb-4">₦{product.price?.toFixed(2)}</p>
           <p className="text-gray-700 mb-6">{product.description || "No description available."}</p>
           
           {/* Quantity Selector */}

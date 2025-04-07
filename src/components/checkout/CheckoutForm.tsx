@@ -111,7 +111,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           />
         </div>
 
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button type="submit" className="w-full bg-coral" disabled={isLoading}>
           {isLoading ? "Processing..." : "Place Order"}
         </Button>
       </form>

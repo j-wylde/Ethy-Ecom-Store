@@ -69,7 +69,7 @@ const Cart = () => {
                       </div>
                     </td>
                     <td className="py-4 px-4 text-center">
-                      ${item.product.price.toFixed(2)}
+                    ₦{item.product.price.toFixed(2)}
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex items-center justify-center">
@@ -99,7 +99,7 @@ const Cart = () => {
                       </div>
                     </td>
                     <td className="py-4 px-4 text-right font-medium">
-                      ${(item.product.price * item.quantity).toFixed(2)}
+                    ₦{(item.product.price * item.quantity).toFixed(2)}
                     </td>
                     <td className="py-4 px-4">
                       <Button
@@ -130,19 +130,19 @@ const Cart = () => {
             <div className="space-y-4">
               <div className="flex justify-between">
                 <span>Items ({totalItems}):</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>₦{subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Shipping:</span>
-                <span>{shippingFee > 0 ? `$${shippingFee.toFixed(2)}` : "Free"}</span>
+                <span>{shippingFee > 0 ? `₦${shippingFee.toFixed(2)}` : "Free"}</span>
               </div>
               <Separator />
               <div className="flex justify-between text-lg font-bold">
                 <span>Total:</span>
-                <span>${total.toFixed(2)}</span>
+                <span>₦{total.toFixed(2)}</span>
               </div>
               <Button
-                className="w-full"
+                className="w-full bg-coral"
                 asChild
                 disabled={!user}
               >
