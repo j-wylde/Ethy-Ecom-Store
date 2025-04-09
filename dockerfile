@@ -1,4 +1,4 @@
-FROM node:slim AS base
+FROM arm64v8/node:23.11.0-alpine AS base
 
 WORKDIR /app
 
@@ -13,6 +13,6 @@ EXPOSE 5173
 
 RUN npm install -g serve
 
-CMD ["npm", "start"]
+CMD ["serve", "-s", "dist"]
 
-#CMD ["serve", "-s", "dist"]
+#CMD ["npm", "start"]
