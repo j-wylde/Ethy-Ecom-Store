@@ -9,7 +9,7 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 5173
+EXPOSE 8080
 
 RUN npm install -g serve
 
