@@ -1,4 +1,4 @@
-FROM arm64v8/node:23.11.0-alpine AS base
+FROM node:current-alpine3.21 AS base
 
 WORKDIR /app
 
@@ -14,5 +14,3 @@ EXPOSE 5173
 RUN npm install -g serve
 
 CMD ["serve", "-s", "dist"]
-
-#CMD ["npm", "start"]
