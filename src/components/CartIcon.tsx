@@ -8,7 +8,7 @@ const CartIcon: React.FC = () => {
   const { totalItems } = useCart();
 
   return (
-    <Link to="/cart" className="relative text-white">
+    <Link to="/cart" className="relative text-white" role="link" aria-label="shopping cart">
       <ShoppingCart className="h-6 w-6 text-white" />
       {totalItems > 0 && (
         <span className="absolute -top-2 -right-2 bg-coral text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">

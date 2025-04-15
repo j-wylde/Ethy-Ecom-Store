@@ -181,12 +181,12 @@ const AdminDashboard = () => {
                               <Link to={`/products/${product.id}`} className="p-1 text-blue-600 hover:bg-blue-100 rounded">
                                 <Eye size={18} />
                               </Link>
-                              <Link to={`/admin/products/edit/${product.id}`} className="p-1 text-amber-600 hover:bg-amber-100 rounded">
+                              <Link to={`/admin/products/edit/${product.id}`} role={`Edit ${product.name}`} className="p-1 text-amber-600 hover:bg-amber-100 rounded">
                                 <Pencil size={18} />
                               </Link>
                               <AlertDialog>
                                 <AlertDialogTrigger asChild>
-                                  <Button size='icon' variant="ghost" className="p-1 text-red-600 hover:text-red-800 hover:bg-red-100 rounded">
+                                  <Button aria-label="Delete" size='icon' variant="ghost" className="p-1 text-red-600 hover:text-red-800 hover:bg-red-100 rounded">
                                     <Trash2 size={18} />
                                   </Button>
                                 </AlertDialogTrigger>
@@ -268,12 +268,12 @@ const AdminDashboard = () => {
                               <Link to={`/blog/${post.id}`} className="p-1 text-blue-600 hover:bg-blue-100 rounded">
                                 <Eye size={18} />
                               </Link>
-                              <Link to={`/admin/blog/edit/${post.id}`} className="p-1 text-amber-600 hover:bg-amber-100 rounded">
+                              <Link to={`/admin/blog/edit/${post.id}`} role="Edit" className="p-1 text-amber-600 hover:bg-amber-100 rounded">
                                 <Pencil size={18} />
                               </Link>
                               <AlertDialog>
                                 <AlertDialogTrigger asChild>
-                                  <Button size="icon" variant="ghost" className="p-1 text-red-600 hover:text-red-800 hover:bg-red-100 rounded">
+                                  <Button aria-label="Delete" size="icon" variant="ghost" className="p-1 text-red-600 hover:text-red-800 hover:bg-red-100 rounded">
                                     <Trash2 size={18} />
                                   </Button>
                                 </AlertDialogTrigger>

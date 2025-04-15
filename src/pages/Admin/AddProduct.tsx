@@ -99,14 +99,20 @@ const AddProduct = () => {
     e.preventDefault();
     
     try {
+      // Validate required fields
+      if (!formData.name || !formData.description || !formData.price || 
+          !formData.stock || !formData.category) {
+        throw new Error('Please fill all required fields');
+      }
+
       const productData = {
         name: formData.name,
         description: formData.description,
-        price: parseFloat(formData.price),
-        stock: parseInt(formData.stock),
+        price: Number(formData.price),
+        stock: Number(formData.stock),
         category: formData.category,
         image_url: formData.image_url || null,
-        shipping_fee: parseFloat(formData.shipping_fee || "0"),
+        shipping_fee: Number(formData.shipping_fee || "0"),
       };
       
       let savedProduct;
@@ -174,7 +180,11 @@ const AddProduct = () => {
         </div>
       ) : (
         <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form 
+            onSubmit={handleSubmit}
+            className="space-y-6" 
+            data-testid="add-product-form"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label htmlFor="name" className="block text-sm font-medium">
@@ -324,6 +334,11 @@ const AddProduct = () => {
                 type="submit"
                 disabled={isLoading}
                 className="coral-button flex items-center gap-2"
+                data-testid="submit-button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSubmit(e);
+                }}
               >
                 {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                 {submitButtonText}

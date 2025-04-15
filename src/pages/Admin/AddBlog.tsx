@@ -63,9 +63,10 @@ const AddBlog = () => {
       const blogData = {
         title: formData.title,
         content: formData.content,
+        excerpt: formData.excerpt,
+        category: formData.category,
         published: formData.status === 'published',
         image_url: imageUrl,
-        // Use the current user ID directly instead of a Promise
         author_id: user?.id || null,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()

@@ -69,7 +69,7 @@ const ProductTable = ({ searchQuery = "" }: ProductTableProps) => {
     return (
       <div className="p-4">
         {Array.from({ length: 5 }).map((_, index) => (
-          <div key={index} className="flex space-x-3 py-3">
+          <div key={index} className="flex space-x-3 py-3" role="status">
             <Skeleton className="h-12 w-12" />
             <div className="space-y-2 flex-1">
               <Skeleton className="h-5 w-1/3" />
@@ -165,7 +165,7 @@ const ProductTable = ({ searchQuery = "" }: ProductTableProps) => {
                       variant="ghost"
                       className="text-blue-600 hover:text-blue-800 hover:bg-blue-100"
                     >
-                      <Link to={`/products/${product.id}`}>
+                      <Link to={`/products/${product.id}`} aria-label={`View ${product.name}`}>
                         <Eye size={18} />
                       </Link>
                     </Button>
@@ -175,13 +175,15 @@ const ProductTable = ({ searchQuery = "" }: ProductTableProps) => {
                       variant="ghost"
                       className="text-amber-600 hover:text-amber-800 hover:bg-amber-100"
                     >
-                      <Link to={`/admin/products/edit/${product.id}`}>
+                      <Link to={`/admin/products/edit/${product.id}`} aria-label={`Edit ${product.name}`}>
                         <Pencil size={18} />
                       </Link>
                     </Button>
                     <Button
                       size="icon"
                       variant="ghost"
+                      role="button"
+                      aria-label={`Delete ${product.name}`}
                       className="text-red-600 hover:text-red-800 hover:bg-red-100"
                       onClick={() => setDeleteProductId(product.id)}
                     >
@@ -206,6 +208,8 @@ const ProductTable = ({ searchQuery = "" }: ProductTableProps) => {
               size="icon"
               onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
               disabled={currentPage === 1}
+              aria-label="Previous Page"
+              role="button"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -216,6 +220,8 @@ const ProductTable = ({ searchQuery = "" }: ProductTableProps) => {
                 setCurrentPage(Math.min(currentPage + 1, totalPages))
               }
               disabled={currentPage === totalPages}
+              aria-label="Next Page"
+              role="button"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
@@ -241,6 +247,8 @@ const ProductTable = ({ searchQuery = "" }: ProductTableProps) => {
               onClick={handleDeleteProduct}
               disabled={isDeleting}
               className="bg-red-500 hover:bg-red-600 flex items-center gap-2"
+              aria-label="Confirm Delete"
+              role="button"
             >
               {isDeleting && <Loader2 className="h-4 w-4 animate-spin" />}
               {isDeleting ? "Deleting..." : "Delete"}

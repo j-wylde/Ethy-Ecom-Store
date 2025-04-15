@@ -30,7 +30,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
       <h2 className="text-xl font-bold mb-4">Shipping Information</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} role="form">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="space-y-2">
             <Label htmlFor="fullName">Full Name</Label>

@@ -13,14 +13,14 @@ const BlogDetail = () => {
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-16 max-w-4xl">
-        <Skeleton className="h-8 w-3/4 mb-2" />
-        <Skeleton className="h-4 w-1/4 mb-6" />
-        <Skeleton className="h-80 w-full mb-8" />
+        <Skeleton data-testid="skeleton" className="h-8 w-3/4 mb-2" />
+        <Skeleton data-testid="skeleton" className="h-4 w-1/4 mb-6" />
+        <Skeleton data-testid="skeleton" className="h-80 w-full mb-8" />
         <div className="space-y-4">
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-3/4" />
+          <Skeleton data-testid="skeleton" className="h-4 w-full" />
+          <Skeleton data-testid="skeleton" className="h-4 w-full" />
+          <Skeleton data-testid="skeleton" className="h-4 w-full" />
+          <Skeleton data-testid="skeleton" className="h-4 w-3/4" />
         </div>
       </div>
     );

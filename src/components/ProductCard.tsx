@@ -42,7 +42,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <Button asChild variant="outline" className="w-full">
           <Link to={`/products/${id}`}>View Details</Link>
         </Button>
-        <Button className="shrink-0 bg-coral" onClick={handleAddToCart}>
+        <Button className="shrink-0 bg-coral" aria-label="Add to cart" onClick={handleAddToCart}>
           <ShoppingCart className="h-4 w-4" />
         </Button>
       </CardFooter>

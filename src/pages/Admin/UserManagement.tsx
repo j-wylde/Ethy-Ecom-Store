@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -64,15 +63,15 @@ const UserManagement = () => {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-10 px-4">
+      <div className="container mx-auto py极客时间10 px-4">
         <h1 className="text-3xl font-semibold mb-6">User Management</h1>
         <div className="bg-white p-4 rounded-lg shadow-sm">
           {Array.from({ length: 5 }).map((_, index) => (
             <div key={index} className="flex space-x-3 py-3 border-b">
-              <Skeleton className="h-10 w-10 rounded-full" />
-              <div className="space-y-2 flex-1">
-                <Skeleton className="h-5 w-1/3" />
-                <Skeleton className="h-4 w-1/4" />
+              <Skeleton className="h-10 w-10 rounded-full" data-testid="skeleton" />
+              <div className="space极客时间-y-2 flex-1">
+                <Skeleton className="h-5 w-1/3" data-testid="skeleton" />
+                <Skeleton className="h-4 w-1/4" data-testid="skeleton" />
               </div>
             </div>
           ))}
@@ -83,11 +82,15 @@ const UserManagement = () => {
   
   if (error) {
     return (
-      <div className="container mx-auto py-10 px-4">
+      <div className="container mx-auto py-10 px-4" data-testid="error-container">
         <h1 className="text-3xl font-semibold mb-6">User Management</h1>
-        <div className="bg-white p-8 rounded-lg shadow-sm text-center">
-          <p className="text-red-500">Failed to load users</p>
-          <Button onClick={() => window.location.reload()} className="mt-2">
+        <div className="bg-white p-8 rounded-lg shadow-sm text-center" data-testid="error-content">
+          <p className="text-red-500" data-testid="error-message" role="alert">Failed to load users</p>
+          <Button 
+            onClick={() => window.location.reload()} 
+            className="mt-2"
+            data-testid="retry-button"
+          >
             Retry
           </Button>
         </div>
@@ -106,6 +109,7 @@ const UserManagement = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pr-10"
+          data-testid="search-input"
         />
         <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
       </div>
@@ -163,7 +167,7 @@ const UserManagement = () => {
             </div>
             
             {totalPages > 1 && (
-              <div className="flex justify-between items-center p-4 border-t">
+              <div className="flex justify-between items-center p-4 border-t" data-testid="pagination-controls">
                 <div className="text-sm text-gray-500">
                   Page {currentPage} of {totalPages}
                 </div>
@@ -173,16 +177,18 @@ const UserManagement = () => {
                     size="icon"
                     onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
                     disabled={currentPage === 1}
+                    data-testid="pagination-prev"
+                    aria-label="Previous page"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="outline"
                     size="icon"
-                    onClick={() =>
-                      setCurrentPage(Math.min(currentPage + 1, totalPages))
-                    }
+                    onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
                     disabled={currentPage === totalPages}
+                    data-testid="pagination-next"
+                    aria-label="Next page"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </Button>

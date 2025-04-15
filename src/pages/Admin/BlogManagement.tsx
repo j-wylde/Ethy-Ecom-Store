@@ -128,7 +128,12 @@ const BlogManagement = () => {
                         </Link>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button size="icon" variant="ghost" className="p-1 text-red-600 hover:text-red-800 hover:bg-red-100 rounded">
+                            <Button 
+                              size="icon" 
+                              variant="ghost" 
+                              className="p-1 text-red-600 hover:text-red-800 hover:bg-red-100 rounded"
+                              aria-label="Delete"
+                            >
                               <Trash2 size={18} />
                             </Button>
                           </AlertDialogTrigger>

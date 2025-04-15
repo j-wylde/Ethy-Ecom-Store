@@ -76,6 +76,7 @@ const Cart = () => {
                         <Button
                           variant="outline"
                           size="icon"
+                          aria-label="Minus"
                           onClick={() =>
                             updateQuantity(item.product.id, item.quantity - 1)
                           }
@@ -88,6 +89,7 @@ const Cart = () => {
                         <Button
                           variant="outline"
                           size="icon"
+                          aria-label="Plus"
                           onClick={() =>
                             updateQuantity(item.product.id, item.quantity + 1)
                           }
@@ -105,6 +107,7 @@ const Cart = () => {
                       <Button
                         variant="ghost"
                         size="icon"
+                        aria-label="Remove item"
                         onClick={() => removeFromCart(item.product.id)}
                         className="text-red-500 hover:text-red-700 hover:bg-red-50"
                       >

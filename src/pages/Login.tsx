@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -42,7 +41,7 @@ const Login = () => {
             </Link>
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+        <form data-testid="login-form" className="mt-8 space-y-6" onSubmit={handleLogin}>
           <input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>

@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import ProductGrid from "@/components/ProductGrid";
 
-const categories = [
+export const categories = [
   "All Products",
   "Body Care", 
   "Facial Care", 

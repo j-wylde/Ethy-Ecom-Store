@@ -39,7 +39,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ category, limit, searchQuery 
           <ProductCard key={product.id} product={product} />
         ))
       ) : (
-        <div className="col-span-full text-center py-8">
+        <div className="col-span-full text-center py-8" role="status">
           <p className="text-gray-500">No products found</p>
         </div>
       )}
