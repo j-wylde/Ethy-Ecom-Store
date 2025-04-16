@@ -9,17 +9,9 @@ import { Toaster } from "@/components/ui/toaster";
 import "./App.css";
 
 // Layouts
-import Layout from "@/layouts/Layout";
 import AdminLayout from "@/layouts/AdminLayout";
 
 // Public pages
-import Index from "@/pages/Index";
-import Shop from "@/pages/Shop";
-import Product from "@/pages/Product";
-import Cart from "@/pages/Cart";
-import Checkout from "@/pages/Checkout";
-import Blog from "@/pages/Blog";
-import BlogDetail from "@/pages/BlogDetail";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Account from "@/pages/Account";
@@ -96,7 +88,6 @@ function App() {
                   </RequireAuth>
                 }
               >
-                <Route path="dashboard" element={<AdminDashboard />} />
                 <Route path="products" element={<ProductManagement />} />
                 <Route path="products/add" element={<AddProduct />} />
                 <Route path="products/edit/:id" element={<AddProduct />} />
