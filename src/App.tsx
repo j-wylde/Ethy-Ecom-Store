@@ -8,9 +8,6 @@ import { Toaster } from "@/components/ui/toaster";
 
 import "./App.css";
 
-// Layouts
-import AdminLayout from "@/layouts/AdminLayout";
-
 // Public pages
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
@@ -20,7 +17,6 @@ import NotFound from "@/pages/NotFound";
 import About from "@/pages/About";
 
 // Admin pages
-import AdminDashboard from "@/pages/Admin/Dashboard";
 import ProductManagement from "@/pages/Admin/ProductManagement";
 import OrderManagement from "@/pages/Admin/OrderManagement";
 import UserManagement from "@/pages/Admin/UserManagement";
