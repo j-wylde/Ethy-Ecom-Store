@@ -1,4 +1,4 @@
-FROM node:23.11.0-alpine3.21 AS base
+FROM node:lts-alpine3.18
 
 WORKDIR /app
 
@@ -9,8 +9,8 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 8080
+EXPOSE 5320
 
-RUN npm install -g serve
+RUN npm install
 
-CMD ["serve", "-s", "dist"]
+CMD ["npm", "start"]

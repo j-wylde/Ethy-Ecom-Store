@@ -28,8 +28,8 @@ jobs:
                 --build-arg RESEND_API_KEY=re_3iQ2ZbBo_LcCJA79SWYcKgySmP6jEfXUp \
                 --build-arg ETHY_STORE_SUPABASE_URL=https://mfjxoreeycicnlezxaew.supabase.co \
                 --build-arg ETHY_STORE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1manhvcmVleWNpY25sZXp4YWV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM2MDU4OTEsImV4cCI6MjA1OTE4MTg5MX0.SAjeuraLuoLOYEQumlPCdSRnR0mv6POlt54UgPlBUZk \
-                -t pimehdev/ethyskinweb:0.3 . 
+                -t pimehdev/ethyskinweb:0.4 . 
 
       - name: Push Docker image to DockerHub
         run: |
-          docker push pimehdev/ethyskinweb:0.3
+          docker push pimehdev/ethyskinweb:0.4
