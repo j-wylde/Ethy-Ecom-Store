@@ -21,6 +21,6 @@ EXPOSE 5320
 ENV HOST=0.0.0.0
 
 # Run preview server
-CMD ["npm", "run", "preview"]
+CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0"]
 
 
